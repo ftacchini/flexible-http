@@ -1,0 +1,33 @@
+{
+  "name": "flexible-http",
+  "version": "0.0.1",
+  "description": "Flexible Http",
+  "main": "dist/src/index.js",
+  "scripts": {
+    "test": "npm run unit-test && npm run integration-test",
+    "unit-test": "jasmine JASMINE_CONFIG_PATH=jasmine.unit-test.json",
+    "integration-test": "jasmine JASMINE_CONFIG_PATH=jasmine.integration-test.json",
+    "build": "rimraf dist && rimraf dts && tsc",
+    "version-minor": "npm version minor && git push && git push --tags",
+    "version-patch": "npm version patch && git push && git push --tags",
+    "version-major": "npm version major && git push && git push --tags"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ftacchini/flexible-http.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ftacchini/flexible-http/issues"
+  },
+  "homepage": "https://github.com/ftacchini/flexible-http#readme",
+  "dependencies": {
+    "@types/body-parser": "^1.17.1",
+    "@types/express": "^4.17.1",
+    "@types/methods": "^1.1.0",
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1",
+    "flexible-core": "0.0.0"
+  }
+}
