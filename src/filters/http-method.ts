@@ -25,11 +25,11 @@ export class HttpMethod implements FlexibleFilter {
         };
     };
 
-    public filterEvent(
+    public async filterEvent(
         event: HttpEvent, 
         filterBinnacle: {
             [key: string]: string;
-        }): boolean {
+        }): Promise<boolean> {
             
             filterBinnacle.path || (filterBinnacle.path = "");
             filterBinnacle.path += this._path; 

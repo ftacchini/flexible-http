@@ -1,4 +1,5 @@
 import { injectable } from "inversify";
+import { merge } from "lodash";
 
 @injectable()
 export class TypesHelper {
@@ -15,7 +16,7 @@ export class TypesHelper {
                 return value;
             default:
                 var instance = new type();
-                _.merge(instance, value);
+                merge(instance, value);
                 return instance;
         }
     }
