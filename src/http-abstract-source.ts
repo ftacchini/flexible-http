@@ -1,9 +1,11 @@
 import * as express from 'express';
 import * as http from 'http';
 import * as https from 'https';
-import { FlexibleEventSource, FlexibleResponse } from 'flexible-core';
+import { FlexibleEventSource, FlexibleResponse, FlexibleLogger } from 'flexible-core';
 import { HttpEvent } from './http-event';
+import { injectable } from 'inversify';
 
+@injectable()
 export abstract class HttpAbstractSource implements FlexibleEventSource {
     
     protected server: https.Server | http.Server;
@@ -11,6 +13,7 @@ export abstract class HttpAbstractSource implements FlexibleEventSource {
     private initialized: boolean = false;
 
     protected constructor(
+        protected logger: FlexibleLogger,
         protected port: number,
         private application: express.Application = express()) {
     }

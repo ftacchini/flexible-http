@@ -1,8 +1,15 @@
 import { FlexibleFilter, RouteData } from "flexible-core";
 import { HttpEventProperties } from "../http-event-properties";
 import { HttpEvent } from "../http-event";
+import { injectable, inject } from "inversify";
+import { HTTP_SOURCE_TYPES } from "../http-source-types";
+import { RouteProcessor } from "../helpers/route-processor";
 
+@injectable()
 export class HttpMethod implements FlexibleFilter {
+
+    constructor(@inject(HTTP_SOURCE_TYPES.HTTP_ROUTE_PROCESSOR) protected routeProcessor: RouteProcessor) {
+    }
 
     public isLastFilter: boolean;
     public contextName: string;

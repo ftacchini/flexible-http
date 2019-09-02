@@ -28,7 +28,7 @@
     "@types/methods": "^1.1.0",
     "body-parser": "^1.19.0",
     "express": "^4.17.1",
-    "flexible-core": "0.0.6",
+    "flexible-core": "0.0.8",
     "lodash": "^4.17.15"
   },
   "devDependencies": {
