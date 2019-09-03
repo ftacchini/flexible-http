@@ -9,8 +9,8 @@ export class HttpEvent implements FlexibleEvent{
 
     constructor(private request: express.Request) {
         this.routeData = {
-            method: request.method,
-            routeParts: request.url.split("/"),
+            method: request.method.toLowerCase(),
+            routeParts: request.path.split("/").filter(p => p),
             route: request.url,
             protocol: request.protocol,
             httpVersion: request.httpVersion,

@@ -1,15 +1,17 @@
-import { FLEXIBLE_APP_TYPES } from "flexible-core";
+import {  FLEXIBLE_APP_TYPES } from "flexible-core";
 import { AsyncContainerModule, interfaces } from "inversify";
 import * as express from 'express';
+import * as https from 'https';
 import { HTTP_SOURCE_TYPES } from "./http-source-types";
-import { HttpSource } from "./http-source";
 import { HttpModule } from "./http-module";
+import { HttpsSource } from "./https-source";
 
-export class HttpSourceModule extends HttpModule {
+export class HttpsSourceModule extends HttpModule {
 
     constructor(
         private port: number,
-        private application: express.Application
+        private application: express.Application,
+        private credentials: https.ServerOptions
     ) {
         super();
     }
@@ -23,15 +25,15 @@ export class HttpSourceModule extends HttpModule {
             
             isBound(HTTP_SOURCE_TYPES.HTTP_SOURCE) || 
                 bind(HTTP_SOURCE_TYPES.HTTP_SOURCE).toDynamicValue((context) => {
-                    return new HttpSource(
+                    return new HttpsSource(
                         context.container.get(HTTP_SOURCE_TYPES.HTTP_RESPONSE_PROCESSOR),
                         context.container.get(FLEXIBLE_APP_TYPES.LOGGER), 
                         this.port, 
+                        this.credentials, 
                         this.application);
                 });
-            
-        });
-
+            });
         return module;
     }
+
 }

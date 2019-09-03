@@ -4,6 +4,7 @@ import * as https from 'https';
 import { FlexibleEventSource, FlexibleResponse, FlexibleLogger } from 'flexible-core';
 import { HttpEvent } from './http-event';
 import { injectable } from 'inversify';
+import { ResponseProcessor } from './helpers/response-processor';
 
 @injectable()
 export abstract class HttpAbstractSource implements FlexibleEventSource {
@@ -13,6 +14,7 @@ export abstract class HttpAbstractSource implements FlexibleEventSource {
     private initialized: boolean = false;
 
     protected constructor(
+        protected responseProcessor: ResponseProcessor,
         protected logger: FlexibleLogger,
         protected port: number,
         private application: express.Application = express()) {
@@ -23,13 +25,13 @@ export abstract class HttpAbstractSource implements FlexibleEventSource {
     private initialize() {
         this.application.all("*", async (req, res, next) => {
             var httpEvent = new HttpEvent(req);
-            var responseStack = await (this.handler && this.handler(httpEvent));
-            
-            if(responseStack && responseStack.length) {
-
+            try {
+                var responses = await (this.handler && this.handler(httpEvent));
+                await this.responseProcessor.writeToResponse(responses, res, next);
             }
-
-            next();
+            catch(err) {
+                next(err);
+            }
         })
 
         this.initialized = true;
@@ -39,14 +41,20 @@ export abstract class HttpAbstractSource implements FlexibleEventSource {
 
         this.initialized || this.initialize();
         
-        var promise = new Promise((resolve, reject) => {
+        var promise = new Promise(async (resolve, reject) => {
+
             this.server = this.createServer(this.application);
             
             this.server.listen(this.port, (err: any, server: any) => {
                 if(err) {
-                    reject(err);
+                    reject({
+                        running: false,
+                        error: err
+                    });
                 } else {
-                    resolve({})
+                    resolve({
+                        running: true
+                    })
                 }
             });
         });
@@ -59,11 +67,19 @@ export abstract class HttpAbstractSource implements FlexibleEventSource {
         var promise = new Promise((resolve, reject) => {
 
             if(this.server){
+
                 this.server.close((err: any) => {
                     if(err) { 
-                        reject(err);
+                        reject({
+                            running: false,
+                            error: err
+                        });
                     } else {
-                        resolve({});
+                        this.server = null;
+                        
+                        resolve({
+                            running: false
+                        });
                     }
                 });
             }
