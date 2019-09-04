@@ -7,30 +7,35 @@ import { injectable } from "inversify";
 export class ResponseProcessor {
 
     public writeToResponse(flexibleResponse: FlexibleResponse[], expressResponse: express.Response, next: express.NextFunction) {
-               
+        
+        if(!flexibleResponse) {
+            next();
+            return;
+        }
+
         var lastError = this.findResponseInStack(flexibleResponse.map(r => r.errorStack));
 
         if(lastError) {
             next(lastError);
+            return;
         }
-        else {
-            var lastResponse = this.findResponseInStack(flexibleResponse.map(r => r.responseStack));
 
-            if(lastResponse.writeToHttpResponse) {
-                lastResponse.writeToHttpResponse(expressResponse, next);
-            }
-            else {
-                expressResponse.json(lastResponse);
-                next();
-            }
+        var lastResponse = this.findResponseInStack(flexibleResponse.map(r => r.responseStack));
+
+        if(lastResponse.writeToHttpResponse) {
+            lastResponse.writeToHttpResponse(expressResponse, next);
+            return
         }
+
+        expressResponse.json(lastResponse);
+        next();
     }
 
     private findResponseInStack(flexibleResponse: any[][]) {
-        var error = flexibleResponse.find(response => {
+        var res = flexibleResponse.find(response => {
             return !!(response && response.length)
         });
 
-        return error && error[error.length - 1];
+        return res && res[res.length - 1];
     }
 }

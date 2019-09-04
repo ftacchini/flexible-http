@@ -1,10 +1,11 @@
 import "reflect-metadata";
 import "jasmine";
-import * as http from "http";
 import { DummyFramework } from "flexible-dummy-framework";
 import { FlexibleApp, FlexibleFrameworkModule, FlexibleAppBuilder } from "flexible-core";
 import { AsyncContainerModule } from "inversify";
 import { HttpModuleBuilder, HttpGet } from "../../src";
+import * as request from "request";
+import { JsonResponse } from "../../src/responses/json-response";
 
 const APP_PORT = 8080;
 
@@ -53,26 +54,24 @@ describe("HttpApp", () => {
         done();
     })
 
-    it("Should respond to operation", async (done) => {
+    it("Should respond to operation with Json by default", async (done) => {
         //ARRANGE
-        var options = {
-            host: 'localhost',
-            path: `/GetItem`,
-            port: APP_PORT,
-            method: "get"
+        const path = `/GetItem`;
+        const expected = {
+            object: "response"
         }
 
         framework.addPipelineDefinition({
             filterStack: [{
                 type: HttpGet,
                 configuration: {
-                    path: options.path
+                    path: path
                 }
             }],
             middlewareStack: [{
                 activationContext: {
                     activate: async () => {
-                        return true;
+                        return expected;
                     }
                 },
                 extractorRecipes: {
@@ -84,19 +83,71 @@ describe("HttpApp", () => {
         //ACT
         await app.run();
 
-        var result = await new Promise((fulfill, reject) => {
-            http.request(options)
-                .on('response', fulfill)
-                .end();
+        
+        var result: any = await new Promise((fulfill, reject) => {
+            request.get(`http://localhost:${APP_PORT}${path}`, {
+                json: true
+            }, (err, res, body) => {
+                if(err){
+                    reject(err)
+                }
+                else {
+                    fulfill(body)
+                }
+            })
         });
 
         //ASSERT
-        expect(result).toEqual(true);
+        expect(result).toEqual(expected);
         done();
     })
 
 
-    it("asd run correctly", () => {
+    it("Should respond to operation with provided response", async (done) => {
+        //ARRANGE
+        const path = `/GetItem`;
+        const expected = {
+            object: "response"
+        }
+
+        framework.addPipelineDefinition({
+            filterStack: [{
+                type: HttpGet,
+                configuration: {
+                    path: path
+                }
+            }],
+            middlewareStack: [{
+                activationContext: {
+                    activate: async () => {
+                        return new JsonResponse(expected);
+                    }
+                },
+                extractorRecipes: {
+                }
+            }]
+        });
+
+        //ACT
+        await app.run();
+
+        
+        var result: any = await new Promise((fulfill, reject) => {
+            request.get(`http://localhost:${APP_PORT}${path}`, {
+                json: true
+            }, (err, res, body) => {
+                if(err){
+                    reject(err)
+                }
+                else {
+                    fulfill(body)
+                }
+            })
+        });
+
+        //ASSERT
+        expect(result).toEqual(expected);
+        done();
     })
 
     afterEach(async (done) => {
