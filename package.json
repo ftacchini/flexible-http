@@ -34,9 +34,11 @@
   },
   "devDependencies": {
     "@types/jasmine": "^3.4.0",
+    "@types/node-forge": "^0.8.6",
     "@types/request": "^2.48.2",
     "flexible-dummy-framework": "0.0.2",
     "jasmine": "^3.4.0",
+    "node-forge": "^0.8.5",
     "request": "^2.88.0",
     "rimraf": "^3.0.0"
   }
