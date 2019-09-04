@@ -1,55 +1,39 @@
-import { FlexibleExtractor, RouteData, FlexibleResponse } from "flexible-core";
+import { FlexibleResponse } from "flexible-core";
 import { HttpEvent } from "../http-event";
-import { HttpEventProperties } from "../http-event-properties";
 import { TypesHelper } from "../helpers/types-helper";
-import { injectable } from "inversify";
+import { injectable, inject } from "inversify";
 import { HttpBodyType } from "./http-body-type";
 import { Options, OptionsJson, OptionsUrlencoded, OptionsText } from "body-parser";
 import * as BodyParser from "body-parser";
+import { HttpExtractor } from "./http-extractor";
+import { HTTP_SOURCE_TYPES } from "../http-source-types";
 
 
 type ParserType = "json" | "raw" | "text" | "urlencoded";
 
 @injectable()
-export class FromBody implements FlexibleExtractor {
+export class FromBody extends HttpExtractor {
 
     public bodyOptions?: Options | OptionsJson | OptionsUrlencoded | OptionsText;
     public bodyType: HttpBodyType;
-    public contextName?: string;
-    public contextType?: any;
+    public allBody: boolean;
     
-    private _name: string;
-    public set name(value: string) {
-        this._name = value;
-    } 
-    public get name(): string {
-        return this._name || this.contextName;
-    }
-    
-    private _type: any;
-    public set type(value: any) {
-        this._type = value;
-    } 
-    public get type(): any {
-        return this._type || this.contextType;
-    }
-
     private static parsersMap = new Map<HttpBodyType, ParserType>(
         [[HttpBodyType.Json, "json"],
          [HttpBodyType.Raw, "raw"],
          [HttpBodyType.Text, "text"],
          [HttpBodyType.Urlencoded, "urlencoded"]])
 
-    constructor(private typesHelper: TypesHelper) {
+    constructor(@inject(HTTP_SOURCE_TYPES.HTTP_TYPES_HELPER) typesHelper: TypesHelper) {
+        super(typesHelper)
     }
 
-    public get staticRouting(): Partial<RouteData<HttpEventProperties>> {
-        return {
-            eventType: HttpEvent.EventType
-        };
-    };
-
-    public async extractValue(event: HttpEvent, response: FlexibleResponse): Promise<any> {
+    public async extractValueFromHttpEvent(
+        event: HttpEvent, 
+        response: FlexibleResponse, 
+        filterBinnacle: {
+            [key: string]: string;
+        }): Promise<any> {
 
         this.bodyType || (this.bodyType = HttpBodyType.Json);
 
@@ -62,7 +46,7 @@ export class FromBody implements FlexibleExtractor {
             return this.parseBody(parser, event);
         }));        
 
-        return this.typesHelper.castToType(possibleValues.find(value => value), this.type);
+        return possibleValues.find(value => value);
     }
     
     private parseBody(parser: any, event: HttpEvent): Promise<any> {
@@ -72,7 +56,7 @@ export class FromBody implements FlexibleExtractor {
                     resolve();
                 }
                 else {
-                    resolve(event.data.body && (this.name ? event.data.body[this.name] : event.data.body));
+                    resolve(event.data.body && (this.name && ! this.allBody ? event.data.body[this.name] : event.data.body));
                 }
             });
         });
