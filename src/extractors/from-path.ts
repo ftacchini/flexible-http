@@ -34,11 +34,7 @@ export class FromPath extends HttpExtractor{
                 return resultingKeys;
             }
             
-            if(this.name && !this.allPath) {
-                let key = keys.find(key => this.isKey(key) && key.name == this.name);
-                return key && resultingKeys[keys.indexOf(key)]; 
-            }
-            else {
+            if(this.allPath) {
                 let pathObject: { [index:string]: string } = {};
                 
                 keys.forEach((key, index) => {
@@ -47,6 +43,12 @@ export class FromPath extends HttpExtractor{
 
                 return pathObject;
             }
+            else if (this.name){
+                let key = keys.find(key => this.isKey(key) && key.name == this.name);
+                return key && resultingKeys[keys.indexOf(key)]; 
+            }
+
+            return null;
     }
 
     private isKey(key: string | PathToRegex.Key): key is PathToRegex.Key {

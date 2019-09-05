@@ -22,9 +22,9 @@ export class FromHeaders extends HttpExtractor {
         }): Promise<any> {
         return event.data && 
             event.data.headers && 
-            this.name && !this.allHeaders ? 
-                event.data.headers[this.name] : 
-                this.allHeaders ? event.data.headers : null;
+            this.allHeaders ? 
+                event.data.header : 
+                this.name && event.data.headers[this.name];
     }
     
 }
