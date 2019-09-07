@@ -3,7 +3,7 @@ import "jasmine";
 import { DummyFramework } from "flexible-dummy-framework";
 import { FlexibleApp, FlexibleFrameworkModule, FlexibleAppBuilder } from "flexible-core";
 import { AsyncContainerModule } from "inversify";
-import { HttpGet, HttpModule } from "../../src";
+import { HttpGet, HttpModule, HttpMethod } from "../../src";
 import * as request from "request";
 import { JsonResponse } from "../../src/responses/json-response";
 
@@ -83,13 +83,13 @@ export function testApp(protocol: string, port: number, moduleBuilder: () => Htt
             //ACT
             await app.run();
 
-            
+
             var result: any = await new Promise((fulfill, reject) => {
                 request.get(`${protocol}://localhost:${port}${path}`, {
                     json: true,
                     rejectUnauthorized: false
                 }, (err, res, body) => {
-                    if(err){
+                    if (err) {
                         reject(err)
                     }
                     else {
@@ -131,13 +131,68 @@ export function testApp(protocol: string, port: number, moduleBuilder: () => Htt
             //ACT
             await app.run();
 
-            
+
             var result: any = await new Promise((fulfill, reject) => {
                 request.get(`${protocol}://localhost:${port}${path}`, {
                     json: true,
                     rejectUnauthorized: false
                 }, (err, res, body) => {
-                    if(err){
+                    if (err) {
+                        reject(err)
+                    }
+                    else {
+                        fulfill(body)
+                    }
+                })
+            });
+
+            //ASSERT
+            expect(result).toEqual(expected);
+            done();
+        })
+
+        it("Should respond to operation with composite path", async (done) => {
+            //ARRANGE
+            const path1 = `/GetItem1`
+            const path2 = `/GetItem2`;
+            const expected = {
+                object: "response"
+            }
+
+            framework.addPipelineDefinition({
+                filterStack: [{
+                    type: HttpMethod,
+                    configuration: {
+                        path: path1
+                    }
+                }, {
+                    type: HttpGet,
+                    configuration: {
+                        path: path2
+                    }
+                }],
+                middlewareStack: [{
+                    activationContext: {
+                        activate: async () => {
+                            return expected;
+                        }
+                    },
+                    extractorRecipes: {
+                    }
+                }]
+            });
+
+
+            //ACT
+            await app.run();
+
+
+            var result: any = await new Promise((fulfill, reject) => {
+                request.get(`${protocol}://localhost:${port}${path1}${path2}`, {
+                    json: true,
+                    rejectUnauthorized: false
+                }, (err, res, body) => {
+                    if (err) {
                         reject(err)
                     }
                     else {

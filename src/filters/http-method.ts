@@ -28,7 +28,7 @@ export class HttpMethod implements FlexibleFilter {
     private _pathTokens: PathToRegex.Token[];
     private get pathTokens(): PathToRegex.Token[] {
         if(!this._pathTokens) {
-            this._pathTokens = this.routeProcessor.parse(this._path);
+            this._pathTokens = this.routeProcessor.parse(this.path);
         }
 
         return this._pathTokens;
@@ -50,7 +50,7 @@ export class HttpMethod implements FlexibleFilter {
             [key: string]: string;
         }): Promise<boolean> {
 
-            filterBinnacle.path ? (filterBinnacle.path += this._path) : (filterBinnacle.path = this.path);
+            filterBinnacle.path ? (filterBinnacle.path += this.path) : (filterBinnacle.path = this.path);
 
             const regex = PathToRegex(filterBinnacle.path, null, {
                 start: !this.isLastFilter,

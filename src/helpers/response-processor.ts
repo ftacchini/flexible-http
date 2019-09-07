@@ -22,7 +22,7 @@ export class ResponseProcessor {
 
         var lastResponse = this.findResponseInStack(flexibleResponse.map(r => r.responseStack));
 
-        if(lastResponse.writeToHttpResponse) {
+        if(lastResponse && lastResponse.writeToHttpResponse) {
             lastResponse.writeToHttpResponse(expressResponse, next);
             return
         }
