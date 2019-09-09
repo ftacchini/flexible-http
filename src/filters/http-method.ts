@@ -57,6 +57,6 @@ export class HttpMethod implements FlexibleFilter {
                 end: this.isLastFilter
             });
             
-            return regex.test(event.data.path);
+            return regex.test(event.data.request.path);
     }
 }

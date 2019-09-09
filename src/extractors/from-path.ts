@@ -28,7 +28,7 @@ export class FromPath extends HttpExtractor{
             let keys: PathToRegex.Key[] = [];
             const regex = PathToRegex(filterBinnacle.path, keys);
 
-            let resultingKeys = regex.exec(event.data.path);
+            let resultingKeys = regex.exec(event.data.request.path);
             
             if(isNullOrUndefined(resultingKeys)) {
                 return resultingKeys;

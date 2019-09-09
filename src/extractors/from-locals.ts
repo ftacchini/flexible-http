@@ -1,14 +1,13 @@
 import { HttpExtractor } from "./http-extractor";
-import { injectable, inject } from "inversify";
+import { inject } from "inversify";
 import { HTTP_SOURCE_TYPES } from "../http-source-types";
-import { TypesHelper } from "../helpers/types-helper";
+import { TypesHelper } from "../helpers";
 import { HttpEvent } from "../http-event";
 import { FlexibleResponse } from "flexible-core";
 
-@injectable()
-export class FromQuery extends HttpExtractor {
-    
-    public allQuery: boolean;
+export class FromLocals extends HttpExtractor {
+
+    public allLocals: boolean;
     
     constructor(
         @inject(HTTP_SOURCE_TYPES.HTTP_TYPES_HELPER) typesHelper: TypesHelper) {
@@ -21,11 +20,11 @@ export class FromQuery extends HttpExtractor {
         filterBinnacle: {
             [key: string]: string;
         }): Promise<any> {
-            return event.data.request && 
-                event.data.request.query && 
-                this.allQuery ? 
-                    event.data.request.query : 
-                    this.name && event.data.request.query[this.name];
+            return event.data.response && 
+                event.data.response.locals && 
+                this.allLocals ? 
+                    event.data.response.locals : 
+                    this.name && event.data.response.locals[this.name];
         
     }
 }

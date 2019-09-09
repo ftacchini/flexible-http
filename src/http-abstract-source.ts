@@ -24,7 +24,7 @@ export abstract class HttpAbstractSource implements FlexibleEventSource {
 
     private initialize() {
         this.application.all("*", async (req, res, next) => {
-            var httpEvent = new HttpEvent(req);
+            var httpEvent = new HttpEvent(req, res);
             try {
                 var responses = await (this.handler && this.handler(httpEvent));
                 await this.responseProcessor.writeToResponse(responses, res, next);

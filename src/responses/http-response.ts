@@ -1,5 +1,5 @@
-import * as express from "express";
+import { NextFunction, Response} from "express";
 
 export interface HttpResponse {
-    writeToHttpResponse(response: express.Response,  next: express.NextFunction): Promise<void>;
+    writeToHttpResponse(response: Response,  next: NextFunction): Promise<void>;
 }

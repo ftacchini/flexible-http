@@ -1,4 +1,4 @@
-import * as express from 'express';
+import { Application } from "express";
 import * as https from 'https';
 
 import { HttpAbstractSource } from './http-abstract-source';
@@ -16,11 +16,11 @@ export class HttpsSource extends HttpAbstractSource {
         logger: FlexibleLogger,
         port: number, 
         private credentials: https.ServerOptions, 
-        application: express.Application = null) {
+        application: Application = null) {
         super(responseProcessor, logger, port, application);
     }
 
-    protected createServer(application: express.Application): https.Server {
+    protected createServer(application: Application): https.Server {
         return https.createServer(this.credentials, application);
     }
 

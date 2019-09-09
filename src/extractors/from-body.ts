@@ -56,7 +56,7 @@ export class FromBody extends HttpExtractor {
                     resolve();
                 }
                 else {
-                    resolve(event.data.body && (this.allBody ? event.data.body : this.name && event.data.body[this.name]));
+                    resolve(event.data.request.body && (this.allBody ? event.data.request.body : this.name && event.data.request.body[this.name]));
                 }
             });
         });

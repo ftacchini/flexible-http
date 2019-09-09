@@ -1,13 +1,16 @@
 import { FlexibleEvent, RouteData } from "flexible-core";
 import { HttpEventProperties } from "./http-event-properties";
-import * as express from "express";
+import { Request, Response} from "express";
 
 export class HttpEvent implements FlexibleEvent{
     
     public static EventType = "HttpEvent"
     public readonly routeData: RouteData<HttpEventProperties>;
 
-    constructor(private request: express.Request) {
+    constructor(
+        private request: Request, 
+        private response: Response) {
+        
         this.routeData = {
             method: request.method.toLowerCase(),
             routeParts: request.path.split("/").filter(p => p),
@@ -18,8 +21,8 @@ export class HttpEvent implements FlexibleEvent{
         }
     }
 
-    public get data(): express.Request {
-        return this.request;
+    public get data(): { request: Request, response: Response} {
+        return { request: this.request, response: this.response };
     }
 
 

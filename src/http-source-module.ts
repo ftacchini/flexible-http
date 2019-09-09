@@ -1,6 +1,6 @@
 import { FLEXIBLE_APP_TYPES } from "flexible-core";
 import { AsyncContainerModule, interfaces } from "inversify";
-import * as express from 'express';
+import { Application } from 'express';
 import { HTTP_SOURCE_TYPES } from "./http-source-types";
 import { HttpSource } from "./http-source";
 import { HttpModule } from "./http-module";
@@ -9,7 +9,7 @@ export class HttpSourceModule extends HttpModule {
 
     constructor(
         private port: number,
-        private application: express.Application
+        private application: Application
     ) {
         super();
     }

@@ -1,4 +1,4 @@
-import * as express from 'express';
+import { Application } from "express";
 import * as http from 'http';
 import { HttpAbstractSource } from './http-abstract-source';
 import { injectable } from 'inversify';
@@ -14,11 +14,11 @@ export class HttpSource extends HttpAbstractSource {
         protected responseProcessor: ResponseProcessor,
         logger: FlexibleLogger,
         port: number, 
-        application: express.Application = null) {
+        application: Application = null) {
         super(responseProcessor, logger, port, application);
     }
 
-    protected createServer(application: express.Application): http.Server {
+    protected createServer(application: Application): http.Server {
         return http.createServer(application);
     }
 

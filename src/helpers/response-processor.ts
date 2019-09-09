@@ -1,12 +1,16 @@
 import { FlexibleResponse } from "flexible-core";
-import * as express from "express";
 import { injectable } from "inversify";
+import { AcceptedResponse } from "../responses/accepted-response";
+import { NextFunction, Response} from "express";
 
 
 @injectable()
 export class ResponseProcessor {
 
-    public writeToResponse(flexibleResponse: FlexibleResponse[], expressResponse: express.Response, next: express.NextFunction) {
+    public async writeToResponse(
+        flexibleResponse: FlexibleResponse[],
+        expressResponse: Response, 
+        next: NextFunction) {
         
         if(!flexibleResponse) {
             next();
@@ -27,8 +31,8 @@ export class ResponseProcessor {
             return
         }
 
-        expressResponse.json(lastResponse);
-        next();
+        var response = new AcceptedResponse(lastResponse);
+        await response.writeToHttpResponse(expressResponse, next);
     }
 
     private findResponseInStack(flexibleResponse: any[][]) {

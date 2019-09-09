@@ -20,11 +20,11 @@ export class FromHeaders extends HttpExtractor {
         filterBinnacle: {
             [key: string]: string;
         }): Promise<any> {
-        return event.data && 
-            event.data.headers && 
+        return event.data.request && 
+            event.data.request.headers && 
             this.allHeaders ? 
-                event.data.header : 
-                this.name && event.data.headers[this.name];
+                event.data.request.header : 
+                this.name && event.data.request.headers[this.name];
     }
     
 }
