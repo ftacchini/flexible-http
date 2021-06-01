@@ -7,7 +7,7 @@ import { ResponseProcessor } from "./helpers/response-processor";
 
 export abstract class HttpModule implements FlexibleEventSourceModule {
     
-    readonly isolatedContainer: AsyncContainerModule;
+    readonly abstract isolatedContainer: AsyncContainerModule;
 
     public get container(): AsyncContainerModule {
         var module =  new AsyncContainerModule(async (
