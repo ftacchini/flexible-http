@@ -53,7 +53,7 @@ export class FromBody extends HttpExtractor {
         return new Promise((resolve, reject) => {
             parser(this.bodyOptions)(event.data, {}, (error: any) => {
                 if(error){
-                    resolve();
+                    resolve(undefined);
                 }
                 else {
                     resolve(event.data.request.body && (this.allBody ? event.data.request.body : this.name && event.data.request.body[this.name]));

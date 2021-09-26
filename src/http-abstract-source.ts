@@ -84,7 +84,7 @@ export abstract class HttpAbstractSource implements FlexibleEventSource {
                 });
             }
             else {
-                resolve();
+                resolve(undefined);
             }
         });
 

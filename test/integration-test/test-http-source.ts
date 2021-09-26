@@ -1,7 +1,7 @@
 import "reflect-metadata";
 import "jasmine";
 import { DummyFramework } from "flexible-dummy-framework";
-import { FlexibleApp, FlexibleFrameworkModule, FlexibleAppBuilder } from "flexible-core";
+import { FlexibleApp, FlexibleFrameworkModule, FlexibleAppBuilder, SilentLoggerModule } from "flexible-core";
 import { AsyncContainerModule } from "inversify";
 import { HttpGet, HttpModule, HttpMethod } from "../../src";
 import * as request from "request";
@@ -26,6 +26,7 @@ export function testApp(protocol: string, port: number, moduleBuilder: () => Htt
             let eventSource = await moduleBuilder();
 
             app = FlexibleAppBuilder.instance
+                .withLogger(new SilentLoggerModule())
                 .addEventSource(eventSource)
                 .addFramework(frameworkModule)
                 .createApp();
@@ -64,7 +65,7 @@ export function testApp(protocol: string, port: number, moduleBuilder: () => Htt
             framework.addPipelineDefinition({
                 filterStack: [{
                     type: HttpGet,
-                    configuration: {
+                    configuration: <any>{
                         path: path
                     }
                 }],
@@ -113,7 +114,7 @@ export function testApp(protocol: string, port: number, moduleBuilder: () => Htt
             framework.addPipelineDefinition({
                 filterStack: [{
                     type: HttpGet,
-                    configuration: {
+                    configuration: <any>{
                         path: path
                     }
                 }],
@@ -162,12 +163,12 @@ export function testApp(protocol: string, port: number, moduleBuilder: () => Htt
             framework.addPipelineDefinition({
                 filterStack: [{
                     type: HttpMethod,
-                    configuration: {
+                    configuration: <any>{
                         path: path1
                     }
                 }, {
                     type: HttpGet,
-                    configuration: {
+                    configuration: <any>{
                         path: path2
                     }
                 }],
