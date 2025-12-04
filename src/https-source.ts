@@ -14,8 +14,8 @@ export class HttpsSource extends HttpAbstractSource {
     public constructor(
         protected responseProcessor: ResponseProcessor,
         logger: FlexibleLogger,
-        port: number, 
-        private credentials: https.ServerOptions, 
+        port: number,
+        private credentials: https.ServerOptions,
         application: Application = null) {
         super(responseProcessor, logger, port, application);
     }

@@ -4,8 +4,49 @@ import { DummyFramework } from "flexible-dummy-framework";
 import { FlexibleApp, FlexibleFrameworkModule, FlexibleAppBuilder, SilentLoggerModule } from "flexible-core";
 import { AsyncContainerModule } from "inversify";
 import { HttpGet, HttpModule, HttpMethod } from "../../src";
-import * as request from "request";
 import { JsonResponse } from "../../src/responses/json-response";
+import * as http from 'http';
+import * as https from 'https';
+
+async function fetchJson(url: string): Promise<any> {
+    const urlObj = new URL(url);
+    const isHttps = urlObj.protocol === 'https:';
+
+    return new Promise((resolve, reject) => {
+        const client = isHttps ? https : http;
+        const options = {
+            hostname: urlObj.hostname,
+            port: urlObj.port,
+            path: urlObj.pathname + urlObj.search,
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' },
+            rejectUnauthorized: false // For self-signed certificates
+        };
+
+        const req = client.request(options, (res) => {
+            let data = '';
+
+            res.on('data', (chunk) => {
+                data += chunk;
+            });
+
+            res.on('end', () => {
+                try {
+                    const json = JSON.parse(data);
+                    resolve(json);
+                } catch (error) {
+                    reject(new Error(`Failed to parse JSON: ${data}`));
+                }
+            });
+        });
+
+        req.on('error', (error) => {
+            reject(error);
+        });
+
+        req.end();
+    });
+}
 
 export function testApp(protocol: string, port: number, moduleBuilder: () => HttpModule) {
 
@@ -14,16 +55,19 @@ export function testApp(protocol: string, port: number, moduleBuilder: () => Htt
         let app: FlexibleApp;
         let framework: DummyFramework;
 
-        beforeEach(async (done) => {
+        beforeEach(async () => {
             framework = new DummyFramework();
+        })
 
+        it("Should run correctly", async () => {
+            //ARRANGE
             let frameworkModule: FlexibleFrameworkModule = {
                 getInstance: () => framework,
                 container: new AsyncContainerModule(async () => { }),
                 isolatedContainer: new AsyncContainerModule(async () => { })
             };
 
-            let eventSource = await moduleBuilder();
+            let eventSource = moduleBuilder();
 
             app = FlexibleAppBuilder.instance
                 .withLogger(new SilentLoggerModule())
@@ -31,31 +75,38 @@ export function testApp(protocol: string, port: number, moduleBuilder: () => Htt
                 .addFramework(frameworkModule)
                 .createApp();
 
-            done();
-        })
-
-        it("Should run correctly", async (done) => {
-            //ARRANGE
             //ACT
             var result = await app.run();
 
             //ASSERT
             expect(result[0]).toEqual({ running: true })
-            done();
         })
 
-        it("Should stop correctly", async (done) => {
+        it("Should stop correctly", async () => {
             //ARRANGE
+            let frameworkModule: FlexibleFrameworkModule = {
+                getInstance: () => framework,
+                container: new AsyncContainerModule(async () => { }),
+                isolatedContainer: new AsyncContainerModule(async () => { })
+            };
+
+            let eventSource = moduleBuilder();
+
+            app = FlexibleAppBuilder.instance
+                .withLogger(new SilentLoggerModule())
+                .addEventSource(eventSource)
+                .addFramework(frameworkModule)
+                .createApp();
+
             //ACT
             await app.run();
             var result = await app.stop();
 
             //ASSERT
             expect(result[0]).toEqual({ running: false })
-            done();
         })
 
-        it("Should respond to operation with Json by default", async (done) => {
+        it("Should respond to operation with Json by default", async () => {
             //ARRANGE
             const path = `/GetItem`;
             const expected = {
@@ -80,31 +131,30 @@ export function testApp(protocol: string, port: number, moduleBuilder: () => Htt
                 }]
             });
 
+            let frameworkModule: FlexibleFrameworkModule = {
+                getInstance: () => framework,
+                container: new AsyncContainerModule(async () => { }),
+                isolatedContainer: new AsyncContainerModule(async () => { })
+            };
+
+            let eventSource = moduleBuilder();
+
+            app = FlexibleAppBuilder.instance
+                .withLogger(new SilentLoggerModule())
+                .addEventSource(eventSource)
+                .addFramework(frameworkModule)
+                .createApp();
 
             //ACT
             await app.run();
-
-
-            var result: any = await new Promise((fulfill, reject) => {
-                request.get(`${protocol}://localhost:${port}${path}`, {
-                    json: true,
-                    rejectUnauthorized: false
-                }, (err, res, body) => {
-                    if (err) {
-                        reject(err)
-                    }
-                    else {
-                        fulfill(body)
-                    }
-                })
-            });
+            await new Promise(resolve => setTimeout(resolve, 100)); // Give server time to fully initialize
+            const result = await fetchJson(`${protocol}://localhost:${port}${path}`);
 
             //ASSERT
             expect(result).toEqual(expected);
-            done();
         })
 
-        it("Should respond to operation with provided response", async (done) => {
+        it("Should respond to operation with provided response", async () => {
             //ARRANGE
             const path = `/GetItem`;
             const expected = {
@@ -129,30 +179,30 @@ export function testApp(protocol: string, port: number, moduleBuilder: () => Htt
                 }]
             });
 
+            let frameworkModule: FlexibleFrameworkModule = {
+                getInstance: () => framework,
+                container: new AsyncContainerModule(async () => { }),
+                isolatedContainer: new AsyncContainerModule(async () => { })
+            };
+
+            let eventSource = moduleBuilder();
+
+            app = FlexibleAppBuilder.instance
+                .withLogger(new SilentLoggerModule())
+                .addEventSource(eventSource)
+                .addFramework(frameworkModule)
+                .createApp();
+
             //ACT
             await app.run();
-
-
-            var result: any = await new Promise((fulfill, reject) => {
-                request.get(`${protocol}://localhost:${port}${path}`, {
-                    json: true,
-                    rejectUnauthorized: false
-                }, (err, res, body) => {
-                    if (err) {
-                        reject(err)
-                    }
-                    else {
-                        fulfill(body)
-                    }
-                })
-            });
+            await new Promise(resolve => setTimeout(resolve, 100)); // Give server time to fully initialize
+            const result = await fetchJson(`${protocol}://localhost:${port}${path}`);
 
             //ASSERT
             expect(result).toEqual(expected);
-            done();
         })
 
-        it("Should respond to operation with composite path", async (done) => {
+        it("Should respond to operation with composite path", async () => {
             //ARRANGE
             const path1 = `/GetItem1`
             const path2 = `/GetItem2`;
@@ -183,33 +233,35 @@ export function testApp(protocol: string, port: number, moduleBuilder: () => Htt
                 }]
             });
 
+            let frameworkModule: FlexibleFrameworkModule = {
+                getInstance: () => framework,
+                container: new AsyncContainerModule(async () => { }),
+                isolatedContainer: new AsyncContainerModule(async () => { })
+            };
+
+            let eventSource = moduleBuilder();
+
+            app = FlexibleAppBuilder.instance
+                .withLogger(new SilentLoggerModule())
+                .addEventSource(eventSource)
+                .addFramework(frameworkModule)
+                .createApp();
 
             //ACT
             await app.run();
-
-
-            var result: any = await new Promise((fulfill, reject) => {
-                request.get(`${protocol}://localhost:${port}${path1}${path2}`, {
-                    json: true,
-                    rejectUnauthorized: false
-                }, (err, res, body) => {
-                    if (err) {
-                        reject(err)
-                    }
-                    else {
-                        fulfill(body)
-                    }
-                })
-            });
+            await new Promise(resolve => setTimeout(resolve, 100)); // Give server time to fully initialize
+            const result = await fetchJson(`${protocol}://localhost:${port}${path1}${path2}`);
 
             //ASSERT
             expect(result).toEqual(expected);
-            done();
         })
 
-        afterEach(async (done) => {
-            await app.stop();
-            done();
+        afterEach(async () => {
+            if (app) {
+                await app.stop();
+                // Give the port time to be released
+                await new Promise(resolve => setTimeout(resolve, 500));
+            }
         })
     })
 }

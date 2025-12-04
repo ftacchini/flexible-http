@@ -10,3 +10,4 @@ export * from "./https-source-module";
 export * from "./https-source";
 export * from "./extractors";
 export * from "./filters";
+export * from "./helpers";

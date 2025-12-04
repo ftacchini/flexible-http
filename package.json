@@ -1,6 +1,6 @@
 {
   "name": "flexible-http",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Flexible Http",
   "main": "dist/src/index.js",
   "scripts": {
@@ -24,25 +24,27 @@
   "homepage": "https://github.com/ftacchini/flexible-http#readme",
   "typings": "./dts/src/index.d.ts",
   "dependencies": {
-    "@types/body-parser": "^1.17.1",
-    "@types/express": "^4.17.1",
-    "@types/methods": "^1.1.0",
-    "body-parser": "^1.19.0",
-    "express": "^4.17.1",
-    "flexible-core": "0.1.1",
-    "lodash": "^4.17.15",
+    "@types/body-parser": "^1.19.5",
+    "@types/express": "^5.0.0",
+    "@types/methods": "^1.1.4",
+    "body-parser": "^1.20.3",
+    "express": "^4.21.1",
+    "flexible-core": "^0.2.0",
+    "inversify": "^6.0.3",
+    "lodash": "^4.17.21",
     "only": "0.0.2",
-    "path-to-regexp": "^3.1.0"
+    "path-to-regexp": "^6.3.0",
+    "reflect-metadata": "^0.2.2"
   },
   "devDependencies": {
-    "@types/jasmine": "^3.4.0",
-    "@types/node-forge": "^0.8.6",
-    "@types/request": "^2.48.2",
-    "flexible-dummy-framework": "0.1.1",
-    "jasmine": "^3.4.0",
-    "node-forge": "^0.8.5",
-    "request": "^2.88.0",
-    "rimraf": "^3.0.0",
-    "typescript": "^4.2.4"
+    "@types/jasmine": "^5.1.4",
+    "@types/node-forge": "^1.3.11",
+    "@types/supertest": "^6.0.2",
+    "flexible-dummy-framework": "^0.2.0",
+    "jasmine": "^5.5.0",
+    "node-forge": "^1.3.1",
+    "rimraf": "^6.0.1",
+    "supertest": "^7.0.0",
+    "typescript": "^5.7.2"
   }
 }

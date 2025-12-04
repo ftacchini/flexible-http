@@ -13,7 +13,7 @@ export class HttpSource extends HttpAbstractSource {
     public constructor(
         protected responseProcessor: ResponseProcessor,
         logger: FlexibleLogger,
-        port: number, 
+        port: number,
         application: Application = null) {
         super(responseProcessor, logger, port, application);
     }
