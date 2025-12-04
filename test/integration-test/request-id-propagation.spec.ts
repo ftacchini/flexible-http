@@ -1,7 +1,6 @@
 import "reflect-metadata";
 import "jasmine";
-import { DummyFramework } from "flexible-dummy-framework";
-import { FlexibleApp, FlexibleFrameworkModule, FlexibleAppBuilder, FlexibleLogger } from "flexible-core";
+import { DummyFramework, FlexibleApp, FlexibleFrameworkModule, FlexibleAppBuilder, FlexibleLogger } from "flexible-core";
 import { AsyncContainerModule } from "inversify";
 import { HttpGet, HttpModuleBuilder } from "../../src";
 import * as http from 'http';
