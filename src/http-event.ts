@@ -3,14 +3,18 @@ import { HttpEventProperties } from "./http-event-properties";
 import { Request, Response} from "express";
 
 export class HttpEvent implements FlexibleEvent{
-    
+
     public static EventType = "HttpEvent"
     public readonly routeData: RouteData<HttpEventProperties>;
+    public readonly requestId?: string;
 
     constructor(
-        private request: Request, 
-        private response: Response) {
-        
+        private request: Request,
+        private response: Response,
+        requestId?: string) {
+
+        this.requestId = requestId;
+
         this.routeData = {
             method: request.method.toLowerCase(),
             routeParts: request.path.split("/").filter(p => p),

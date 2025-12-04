@@ -23,13 +23,14 @@ export abstract class HttpAbstractSource implements FlexibleEventSource {
 
     private initialize() {
         this.application.all("*", async (req, res, next) => {
-            // Generate request ID for tracking (avoid logging sensitive data)
-            const requestId = `http-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`;
+            // Use X-Request-ID header if present, otherwise generate one
+            const requestId = req.headers['x-request-id'] as string ||
+                             `${Date.now()}-${Math.random().toString(36).substring(2, 6)}`;
 
             // Log request details (safe metadata only, no body/query params)
             this.logger.debug(`[${requestId}] HTTP ${req.method} ${req.path} - Client: ${req.ip || 'unknown'}`);
 
-            var httpEvent = new HttpEvent(req, res);
+            var httpEvent = new HttpEvent(req, res, requestId);
             try {
                 const startTime = Date.now();
                 var responses = await (this.handler && this.handler(httpEvent));
