@@ -1,5 +1,5 @@
 import { HttpSourceModule } from "./http-source-module";
-import * as express from "express";
+import express from "express";
 import * as https from 'https';
 import { HttpsSourceModule } from "./https-source-module";
 import { HttpModule } from "./http-module";

@@ -9,9 +9,9 @@ export class ResponseProcessor {
 
     public async writeToResponse(
         flexibleResponse: FlexibleResponse[],
-        expressResponse: Response, 
+        expressResponse: Response,
         next: NextFunction) {
-        
+
         if(!flexibleResponse) {
             next();
             return;
