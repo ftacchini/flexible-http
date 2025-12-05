@@ -13,12 +13,26 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+      with:
+        path: flexible-http
+    - name: Checkout flexible-core
+      uses: actions/checkout@v4
+      with:
+        repository: ftacchini/flexible-core
+        path: flexible-core
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v4
       with:
         node-version: ${{ matrix.node-version }}
-    - name: npm install, build, and test
+    - name: Install and build flexible-core
+      working-directory: flexible-core
       run: |
+        npm install
+        npm run build
+    - name: Install, build, and test flexible-http
+      working-directory: flexible-http
+      run: |
+        npm install ../flexible-core
         npm install
         npm run build --if-present
         npm run test
