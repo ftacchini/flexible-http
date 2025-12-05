@@ -33,7 +33,6 @@ jobs:
       working-directory: flexible-http
       run: |
         npm install ../flexible-core
-        npm install
         npm run build --if-present
         npm run test
       env:
