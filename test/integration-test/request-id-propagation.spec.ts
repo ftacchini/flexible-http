@@ -8,36 +8,41 @@ import * as http from 'http';
 class CaptureLogger implements FlexibleLogger {
     public logs: string[] = [];
 
-    debug(log: String): void {
-        this.logs.push(log.toString());
+    private logWithContext(message: string, context?: any): void {
+        const contextStr = context ? ` ${JSON.stringify(context)}` : '';
+        this.logs.push(message + contextStr);
     }
 
-    info(log: String): void {
-        this.logs.push(log.toString());
+    debug(message: string, context?: any): void {
+        this.logWithContext(message, context);
     }
 
-    notice(log: String): void {
-        this.logs.push(log.toString());
+    info(message: string, context?: any): void {
+        this.logWithContext(message, context);
     }
 
-    warning(log: String): void {
-        this.logs.push(log.toString());
+    notice(message: string, context?: any): void {
+        this.logWithContext(message, context);
     }
 
-    error(log: String): void {
-        this.logs.push(log.toString());
+    warning(message: string, context?: any): void {
+        this.logWithContext(message, context);
     }
 
-    crit(log: String): void {
-        this.logs.push(log.toString());
+    error(message: string, context?: any): void {
+        this.logWithContext(message, context);
     }
 
-    alert(log: String): void {
-        this.logs.push(log.toString());
+    crit(message: string, context?: any): void {
+        this.logWithContext(message, context);
     }
 
-    emergency(log: String): void {
-        this.logs.push(log.toString());
+    alert(message: string, context?: any): void {
+        this.logWithContext(message, context);
+    }
+
+    emergency(message: string, context?: any): void {
+        this.logWithContext(message, context);
     }
 
     clear(): void {
@@ -152,28 +157,27 @@ describe("X-Request-ID Propagation", () => {
 
         expect(requestLogs.length).toBeGreaterThan(0);
 
-        const httpLog = requestLogs.find(log => log.includes('HTTP GET'));
+        const httpLog = requestLogs.find(log => log.includes('HTTP request received'));
         expect(httpLog).toBeDefined();
-        expect(httpLog).toContain(`[${customRequestId}]`);
-        expect(httpLog).toContain('HTTP GET /test');
+        expect(httpLog).toContain(customRequestId);
+        expect(httpLog).toContain('"method":"GET"');
+        expect(httpLog).toContain('"/test"');
 
         const appReceivedLog = requestLogs.find(log => log.includes('Request received'));
         expect(appReceivedLog).toBeDefined();
-        expect(appReceivedLog).toContain(`[${customRequestId}]`);
+        expect(appReceivedLog).toContain(customRequestId);
 
         const routingLog = requestLogs.find(log => log.includes('Routing request'));
         expect(routingLog).toBeDefined();
-        expect(routingLog).toContain(`[${customRequestId}]`);
+        expect(routingLog).toContain(customRequestId);
 
         const completedLog = requestLogs.find(log => log.includes('Request completed'));
         expect(completedLog).toBeDefined();
-        expect(completedLog).toContain(`[${customRequestId}]`);
+        expect(completedLog).toContain(customRequestId);
 
-        const allRequestIdLogs = captureLogger.logs.filter(log => log.match(/\[.*\]/));
-        const nonCustomIdLogs = allRequestIdLogs.filter(log =>
-            !log.includes(customRequestId) &&
-            !log.includes('[DEBUG]')
-        );
+        // Verify all logs with this request ID are isolated
+        const allRequestIdLogs = captureLogger.logs.filter(log => log.includes('"requestId"'));
+        const nonCustomIdLogs = allRequestIdLogs.filter(log => !log.includes(customRequestId));
 
         expect(nonCustomIdLogs.length).toBe(0);
     });
@@ -232,14 +236,16 @@ describe("X-Request-ID Propagation", () => {
 
         expect(result).toEqual(expected);
 
-        const httpLog = captureLogger.logs.find(log => log.includes('HTTP GET'));
+        const httpLog = captureLogger.logs.find(log => log.includes('HTTP request received'));
         expect(httpLog).toBeDefined();
 
-        const requestIdMatch = httpLog!.match(/\[([^\]]+)\]/);
+        // Extract requestId from JSON context
+        const requestIdMatch = httpLog!.match(/"requestId":"([^"]+)"/);
         expect(requestIdMatch).toBeDefined();
 
         const generatedRequestId = requestIdMatch![1];
 
+        // Verify it matches the generated format (timestamp-random)
         expect(generatedRequestId).toMatch(/^\d+-[a-z0-9]+$/);
 
         const requestLogs = captureLogger.logs.filter(log => log.includes(generatedRequestId));
@@ -247,7 +253,7 @@ describe("X-Request-ID Propagation", () => {
 
         const appReceivedLog = requestLogs.find(log => log.includes('Request received'));
         expect(appReceivedLog).toBeDefined();
-        expect(appReceivedLog).toContain(`[${generatedRequestId}]`);
+        expect(appReceivedLog).toContain(generatedRequestId);
     });
 
     it("Should use different request IDs for concurrent requests", async () => {

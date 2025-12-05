@@ -28,7 +28,12 @@ export abstract class HttpAbstractSource implements FlexibleEventSource {
                              `${Date.now()}-${Math.random().toString(36).substring(2, 6)}`;
 
             // Log request details (safe metadata only, no body/query params)
-            this.logger.debug(`[${requestId}] HTTP ${req.method} ${req.path} - Client: ${req.ip || 'unknown'}`);
+            this.logger.debug("HTTP request received", {
+                requestId,
+                method: req.method,
+                path: req.path,
+                clientIp: req.ip || 'unknown'
+            });
 
             var httpEvent = new HttpEvent(req, res, requestId);
             try {
@@ -36,14 +41,24 @@ export abstract class HttpAbstractSource implements FlexibleEventSource {
                 var responses = await (this.handler && this.handler(httpEvent));
                 const duration = Date.now() - startTime;
 
-                this.logger.debug(`[${requestId}] Handler completed in ${duration}ms - ${responses?.length || 0} response(s)`);
+                this.logger.debug("Handler completed", {
+                    requestId,
+                    duration,
+                    responseCount: responses?.length || 0
+                });
 
                 await this.responseProcessor.writeToResponse(responses, res, next);
 
-                this.logger.debug(`[${requestId}] Response sent - Status: ${res.statusCode}`);
+                this.logger.debug("Response sent", {
+                    requestId,
+                    statusCode: res.statusCode
+                });
             }
             catch(err) {
-                this.logger.debug(`[${requestId}] Request failed - Error: ${err instanceof Error ? err.message : 'Unknown error'}`);
+                this.logger.debug("Request failed", {
+                    requestId,
+                    error: err instanceof Error ? err.message : 'Unknown error'
+                });
                 next(err);
             }
         })
