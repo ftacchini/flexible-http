@@ -1,7 +1,7 @@
 import "reflect-metadata";
 import "jasmine";
 import { DummyFramework, FlexibleApp, FlexibleFrameworkModule, FlexibleAppBuilder, FlexibleLogger } from "flexible-core";
-import { AsyncContainerModule } from "inversify";
+import { ContainerModule } from "inversify";
 import { HttpGet, HttpModuleBuilder } from "../../src";
 import * as http from 'http';
 
@@ -117,8 +117,8 @@ describe("X-Request-ID Propagation", () => {
 
         let frameworkModule: FlexibleFrameworkModule = {
             getInstance: () => framework,
-            container: new AsyncContainerModule(async () => { }),
-            isolatedContainer: new AsyncContainerModule(async () => { })
+            container: new ContainerModule(() => { }),
+            isolatedContainer: new ContainerModule(() => { })
         };
 
         let eventSource = HttpModuleBuilder.instance
@@ -127,7 +127,7 @@ describe("X-Request-ID Propagation", () => {
 
         let loggerModule = {
             getInstance: () => captureLogger,
-            container: new AsyncContainerModule(async () => { })
+            container: new ContainerModule(() => { })
         };
 
         app = FlexibleAppBuilder.instance
@@ -201,8 +201,8 @@ describe("X-Request-ID Propagation", () => {
 
         let frameworkModule: FlexibleFrameworkModule = {
             getInstance: () => framework,
-            container: new AsyncContainerModule(async () => { }),
-            isolatedContainer: new AsyncContainerModule(async () => { })
+            container: new ContainerModule(() => { }),
+            isolatedContainer: new ContainerModule(() => { })
         };
 
         let eventSource = HttpModuleBuilder.instance
@@ -211,7 +211,7 @@ describe("X-Request-ID Propagation", () => {
 
         let loggerModule = {
             getInstance: () => captureLogger,
-            container: new AsyncContainerModule(async () => { })
+            container: new ContainerModule(() => { })
         };
 
         app = FlexibleAppBuilder.instance
@@ -276,8 +276,8 @@ describe("X-Request-ID Propagation", () => {
 
         let frameworkModule: FlexibleFrameworkModule = {
             getInstance: () => framework,
-            container: new AsyncContainerModule(async () => { }),
-            isolatedContainer: new AsyncContainerModule(async () => { })
+            container: new ContainerModule(() => { }),
+            isolatedContainer: new ContainerModule(() => { })
         };
 
         let eventSource = HttpModuleBuilder.instance
@@ -286,7 +286,7 @@ describe("X-Request-ID Propagation", () => {
 
         let loggerModule = {
             getInstance: () => captureLogger,
-            container: new AsyncContainerModule(async () => { })
+            container: new ContainerModule(() => { })
         };
 
         app = FlexibleAppBuilder.instance

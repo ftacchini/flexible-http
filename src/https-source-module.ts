@@ -1,5 +1,5 @@
-import {  FLEXIBLE_APP_TYPES } from "flexible-core";
-import { AsyncContainerModule, interfaces } from "inversify";
+import {  FLEXIBLE_APP_TYPES, FlexibleEventSource } from "flexible-core";
+import { ContainerModule, Container } from "inversify";
 import { Application } from "express";
 import * as https from 'https';
 import { HTTP_SOURCE_TYPES } from "./http-source-types";
@@ -16,24 +16,17 @@ export class HttpsSourceModule extends HttpModule {
         super();
     }
 
-    public get isolatedContainer(): AsyncContainerModule {
-        var module =  new AsyncContainerModule(async (
-            bind: interfaces.Bind,
-            unbind: interfaces.Unbind,
-            isBound: interfaces.IsBound,
-            rebind: interfaces.Rebind) => {
-            
-            isBound(HTTP_SOURCE_TYPES.HTTP_SOURCE) || 
-                bind(HTTP_SOURCE_TYPES.HTTP_SOURCE).toDynamicValue((context) => {
-                    return new HttpsSource(
-                        context.container.get(HTTP_SOURCE_TYPES.HTTP_RESPONSE_PROCESSOR),
-                        context.container.get(FLEXIBLE_APP_TYPES.LOGGER), 
-                        this.port, 
-                        this.credentials, 
-                        this.application);
-                });
-            });
-        return module;
+    public get isolatedContainer(): ContainerModule {
+        return new ContainerModule(() => {});
     }
 
+    protected createInstance(container: Container): FlexibleEventSource {
+        return new HttpsSource(
+            container.get(HTTP_SOURCE_TYPES.HTTP_RESPONSE_PROCESSOR),
+            container.get(FLEXIBLE_APP_TYPES.LOGGER),
+            this.port,
+            this.credentials,
+            this.application
+        );
+    }
 }
