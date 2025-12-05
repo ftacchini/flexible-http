@@ -1,8 +1,7 @@
 import "reflect-metadata";
 import "jasmine";
-import { DummyFramework } from "flexible-dummy-framework";
-import { FlexibleApp, FlexibleFrameworkModule, FlexibleAppBuilder, SilentLoggerModule } from "flexible-core";
-import { AsyncContainerModule } from "inversify";
+import { DummyFramework, FlexibleApp, FlexibleFrameworkModule, FlexibleAppBuilder, SilentLoggerModule } from "flexible-core";
+import { ContainerModule } from "inversify";
 import { HttpGet, HttpModule, HttpMethod } from "../../src";
 import { JsonResponse } from "../../src/responses/json-response";
 import * as http from 'http';
@@ -63,8 +62,8 @@ export function testApp(protocol: string, port: number, moduleBuilder: () => Htt
             //ARRANGE
             let frameworkModule: FlexibleFrameworkModule = {
                 getInstance: () => framework,
-                container: new AsyncContainerModule(async () => { }),
-                isolatedContainer: new AsyncContainerModule(async () => { })
+                container: new ContainerModule(() => { }),
+                isolatedContainer: new ContainerModule(() => { })
             };
 
             let eventSource = moduleBuilder();
@@ -86,8 +85,8 @@ export function testApp(protocol: string, port: number, moduleBuilder: () => Htt
             //ARRANGE
             let frameworkModule: FlexibleFrameworkModule = {
                 getInstance: () => framework,
-                container: new AsyncContainerModule(async () => { }),
-                isolatedContainer: new AsyncContainerModule(async () => { })
+                container: new ContainerModule(() => { }),
+                isolatedContainer: new ContainerModule(() => { })
             };
 
             let eventSource = moduleBuilder();
@@ -133,8 +132,8 @@ export function testApp(protocol: string, port: number, moduleBuilder: () => Htt
 
             let frameworkModule: FlexibleFrameworkModule = {
                 getInstance: () => framework,
-                container: new AsyncContainerModule(async () => { }),
-                isolatedContainer: new AsyncContainerModule(async () => { })
+                container: new ContainerModule(() => { }),
+                isolatedContainer: new ContainerModule(() => { })
             };
 
             let eventSource = moduleBuilder();
@@ -181,8 +180,8 @@ export function testApp(protocol: string, port: number, moduleBuilder: () => Htt
 
             let frameworkModule: FlexibleFrameworkModule = {
                 getInstance: () => framework,
-                container: new AsyncContainerModule(async () => { }),
-                isolatedContainer: new AsyncContainerModule(async () => { })
+                container: new ContainerModule(() => { }),
+                isolatedContainer: new ContainerModule(() => { })
             };
 
             let eventSource = moduleBuilder();
@@ -235,8 +234,8 @@ export function testApp(protocol: string, port: number, moduleBuilder: () => Htt
 
             let frameworkModule: FlexibleFrameworkModule = {
                 getInstance: () => framework,
-                container: new AsyncContainerModule(async () => { }),
-                isolatedContainer: new AsyncContainerModule(async () => { })
+                container: new ContainerModule(() => { }),
+                isolatedContainer: new ContainerModule(() => { })
             };
 
             let eventSource = moduleBuilder();

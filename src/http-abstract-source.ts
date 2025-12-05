@@ -23,12 +23,27 @@ export abstract class HttpAbstractSource implements FlexibleEventSource {
 
     private initialize() {
         this.application.all("*", async (req, res, next) => {
-            var httpEvent = new HttpEvent(req, res);
+            // Use X-Request-ID header if present, otherwise generate one
+            const requestId = req.headers['x-request-id'] as string ||
+                             `${Date.now()}-${Math.random().toString(36).substring(2, 6)}`;
+
+            // Log request details (safe metadata only, no body/query params)
+            this.logger.debug(`[${requestId}] HTTP ${req.method} ${req.path} - Client: ${req.ip || 'unknown'}`);
+
+            var httpEvent = new HttpEvent(req, res, requestId);
             try {
+                const startTime = Date.now();
                 var responses = await (this.handler && this.handler(httpEvent));
+                const duration = Date.now() - startTime;
+
+                this.logger.debug(`[${requestId}] Handler completed in ${duration}ms - ${responses?.length || 0} response(s)`);
+
                 await this.responseProcessor.writeToResponse(responses, res, next);
+
+                this.logger.debug(`[${requestId}] Response sent - Status: ${res.statusCode}`);
             }
             catch(err) {
+                this.logger.debug(`[${requestId}] Request failed - Error: ${err instanceof Error ? err.message : 'Unknown error'}`);
                 next(err);
             }
         })
