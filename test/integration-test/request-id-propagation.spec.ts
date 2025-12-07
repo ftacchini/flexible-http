@@ -2,7 +2,7 @@ import "reflect-metadata";
 import "jasmine";
 import { DummyFramework, FlexibleApp, FlexibleFrameworkModule, FlexibleAppBuilder, FlexibleLogger } from "flexible-core";
 import { ContainerModule } from "inversify";
-import { HttpGet, HttpModuleBuilder } from "../../src";
+import { HttpGet, HttpModule } from "../../src";
 import * as http from 'http';
 
 class CaptureLogger implements FlexibleLogger {
@@ -126,7 +126,7 @@ describe("X-Request-ID Propagation", () => {
             isolatedContainer: new ContainerModule(() => { })
         };
 
-        let eventSource = HttpModuleBuilder.instance
+        let eventSource = HttpModule.builder()
             .withPort(APP_PORT)
             .build();
 
@@ -209,7 +209,7 @@ describe("X-Request-ID Propagation", () => {
             isolatedContainer: new ContainerModule(() => { })
         };
 
-        let eventSource = HttpModuleBuilder.instance
+        let eventSource = HttpModule.builder()
             .withPort(APP_PORT)
             .build();
 
@@ -286,7 +286,7 @@ describe("X-Request-ID Propagation", () => {
             isolatedContainer: new ContainerModule(() => { })
         };
 
-        let eventSource = HttpModuleBuilder.instance
+        let eventSource = HttpModule.builder()
             .withPort(APP_PORT)
             .build();
 

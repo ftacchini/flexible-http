@@ -90,7 +90,7 @@ describe("HTTP Filters Integration Tests", () => {
             isolatedContainer: new ContainerModule(() => { })
         };
 
-        const eventSource = HttpModuleBuilder.instance
+        const eventSource = HttpModule.builder()
             .withPort(FILTER_TEST_PORT)
             .build();
 

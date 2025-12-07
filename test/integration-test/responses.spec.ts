@@ -114,7 +114,7 @@ describe("HTTP Responses Integration Tests", () => {
             isolatedContainer: new ContainerModule(() => { })
         };
 
-        const eventSource = HttpModuleBuilder.instance
+        const eventSource = HttpModule.builder()
             .withPort(RESPONSE_TEST_PORT)
             .build();
 
@@ -452,7 +452,7 @@ describe("HTTP Responses Integration Tests", () => {
                 isolatedContainer: new ContainerModule(() => { })
             };
 
-            const eventSource = HttpModuleBuilder.instance
+            const eventSource = HttpModule.builder()
                 .withPort(RESPONSE_TEST_PORT)
                 .withApplication(expressApp)
                 .build();
@@ -521,7 +521,7 @@ describe("HTTP Responses Integration Tests", () => {
                 isolatedContainer: new ContainerModule(() => { })
             };
 
-            const eventSource = HttpModuleBuilder.instance
+            const eventSource = HttpModule.builder()
                 .withPort(RESPONSE_TEST_PORT)
                 .withApplication(expressApp)
                 .build();
