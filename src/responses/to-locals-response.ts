@@ -8,7 +8,11 @@ export class ToLocalsResponse implements HttpResponse {
     }
 
     public async writeToHttpResponse(response: Response,  next: NextFunction): Promise<void> {
-        response.locals ? (response.locals = this.data) : assign(response.locals, this.data);
+        if (response.locals) {
+            assign(response.locals, this.data);
+        } else {
+            response.locals = this.data;
+        }
         next();
     }
 }

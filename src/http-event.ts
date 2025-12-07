@@ -7,6 +7,7 @@ export class HttpEvent implements FlexibleEvent{
     public static EventType = "HttpEvent"
     public readonly routeData: RouteData<HttpEventProperties>;
     public readonly requestId?: string;
+    public readonly sourceIp: string;
 
     constructor(
         private request: Request,
@@ -14,6 +15,7 @@ export class HttpEvent implements FlexibleEvent{
         requestId?: string) {
 
         this.requestId = requestId;
+        this.sourceIp = request.ip || request.socket?.remoteAddress || 'unknown';
 
         this.routeData = {
             method: request.method.toLowerCase(),
