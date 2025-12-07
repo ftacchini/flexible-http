@@ -96,7 +96,7 @@ describe("HTTP Extractors Integration Tests", () => {
             isolatedContainer: new ContainerModule(() => { })
         };
 
-        const eventSource = HttpModuleBuilder.instance
+        const eventSource = HttpModule.builder()
             .withPort(EXTRACTOR_TEST_PORT)
             .build();
 

@@ -4,8 +4,17 @@ import { HTTP_SOURCE_TYPES } from "./http-source-types";
 import { TypesHelper } from "./helpers/types-helper";
 import { ResponseProcessor } from "./helpers/response-processor";
 import { RouteProcessor } from "./helpers/route-processor";
+import { HttpModuleBuilder } from "./http-module-builder";
 
 export abstract class HttpModule implements FlexibleEventSourceModule {
+
+    /**
+     * Creates a new builder for constructing HttpModule instances.
+     * @returns A new HttpModuleBuilder instance
+     */
+    public static builder(): HttpModuleBuilder {
+        return new HttpModuleBuilder();
+    }
 
     readonly abstract isolatedContainer: ContainerModule;
     private instanceCreated: boolean = false;

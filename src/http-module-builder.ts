@@ -14,13 +14,7 @@ export class HttpModuleBuilder {
     private application: express.Application;
     private credentials: https.ServerOptions;
 
-
-    private static _instance: HttpModuleBuilder;
-    public static get instance() {
-        return this._instance || (this._instance = new HttpModuleBuilder());
-    }
-
-    private constructor() {
+    constructor() {
         this.reset();
     }
 

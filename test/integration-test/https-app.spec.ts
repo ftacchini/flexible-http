@@ -1,6 +1,6 @@
 import "reflect-metadata";
 import "jasmine";
-import { HttpModuleBuilder } from "../../src";
+import { HttpModule } from "../../src";
 import { testApp } from "./test-http-source"
 import * as forge from "node-forge";
 
@@ -33,7 +33,7 @@ var pem_cert = pki.certificateToPem(cert);
 
 
 testApp("https", APP_PORT, () => {
-    return HttpModuleBuilder.instance
+    return HttpModule.builder()
         .withPort(APP_PORT)
         .withCredentials({
             key: pem_pkey,
