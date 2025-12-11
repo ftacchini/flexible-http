@@ -1,7 +1,7 @@
 import { FlexibleResponse } from "flexible-core";
 import { HttpEvent } from "../http-event";
 import { TypesHelper } from "../helpers/types-helper";
-import { injectable, inject } from "inversify";
+import { injectable, inject } from "tsyringe";
 import { HttpBodyType } from "./http-body-type";
 import { Options, OptionsJson, OptionsUrlencoded, OptionsText } from "body-parser";
 import * as BodyParser from "body-parser";

@@ -1,5 +1,5 @@
-import { FlexibleEventSourceModule, FlexibleEventSource } from "flexible-core";
-import { ContainerModule, Container } from "inversify";
+import { FlexibleEventSourceModule, FlexibleEventSource, FlexibleContainer } from "flexible-core";
+import { DependencyContainer } from "tsyringe";
 import { HTTP_SOURCE_TYPES } from "./http-source-types";
 import { TypesHelper } from "./helpers/types-helper";
 import { ResponseProcessor } from "./helpers/response-processor";
@@ -16,28 +16,33 @@ export abstract class HttpModule implements FlexibleEventSourceModule {
         return new HttpModuleBuilder();
     }
 
-    readonly abstract isolatedContainer: ContainerModule;
     private instanceCreated: boolean = false;
 
-    public get container(): ContainerModule {
-        var module =  new ContainerModule(({ bind, unbind, isBound, rebind }) => {
-            isBound(HTTP_SOURCE_TYPES.HTTP_TYPES_HELPER) || bind(HTTP_SOURCE_TYPES.HTTP_TYPES_HELPER).to(TypesHelper).inSingletonScope();
-            isBound(HTTP_SOURCE_TYPES.HTTP_RESPONSE_PROCESSOR) || bind(HTTP_SOURCE_TYPES.HTTP_RESPONSE_PROCESSOR).to(ResponseProcessor).inSingletonScope();
-            isBound(HTTP_SOURCE_TYPES.HTTP_ROUTE_PROCESSOR) || bind(HTTP_SOURCE_TYPES.HTTP_ROUTE_PROCESSOR).to(RouteProcessor).inSingletonScope();
-        });
-
-        return module;
+    public register(container: DependencyContainer): void {
+        if (!container.isRegistered(HTTP_SOURCE_TYPES.HTTP_TYPES_HELPER)) {
+            container.registerSingleton(HTTP_SOURCE_TYPES.HTTP_TYPES_HELPER, TypesHelper);
+        }
+        if (!container.isRegistered(HTTP_SOURCE_TYPES.HTTP_RESPONSE_PROCESSOR)) {
+            container.registerSingleton(HTTP_SOURCE_TYPES.HTTP_RESPONSE_PROCESSOR, ResponseProcessor);
+        }
+        if (!container.isRegistered(HTTP_SOURCE_TYPES.HTTP_ROUTE_PROCESSOR)) {
+            container.registerSingleton(HTTP_SOURCE_TYPES.HTTP_ROUTE_PROCESSOR, RouteProcessor);
+        }
     }
 
-    public getInstance(container: Container): FlexibleEventSource {
+    public registerIsolated(container: DependencyContainer): void {
+        // Empty implementation - binding happens in getInstance
+    }
+
+    public getInstance(container: FlexibleContainer): FlexibleEventSource {
         // Create and bind the instance if not already done
         if (!this.instanceCreated) {
             const instance = this.createInstance(container);
-            container.bind(HTTP_SOURCE_TYPES.HTTP_SOURCE).toConstantValue(instance);
+            container.registerValue(HTTP_SOURCE_TYPES.HTTP_SOURCE, instance);
             this.instanceCreated = true;
         }
-        return container.get<FlexibleEventSource>(HTTP_SOURCE_TYPES.HTTP_SOURCE);
+        return container.resolve<FlexibleEventSource>(HTTP_SOURCE_TYPES.HTTP_SOURCE);
     }
 
-    protected abstract createInstance(container: Container): FlexibleEventSource;
+    protected abstract createInstance(container: FlexibleContainer): FlexibleEventSource;
 }

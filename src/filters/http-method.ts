@@ -1,7 +1,7 @@
 import { FlexibleFilter, RouteData } from "flexible-core";
 import { HttpEventProperties } from "../http-event-properties";
 import { HttpEvent } from "../http-event";
-import { injectable, inject } from "inversify";
+import { injectable, inject } from "tsyringe";
 import { HTTP_SOURCE_TYPES } from "../http-source-types";
 import { Key } from "path-to-regexp";
 import { flatten } from "lodash";

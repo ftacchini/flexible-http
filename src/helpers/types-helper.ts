@@ -1,4 +1,4 @@
-import { injectable } from "inversify";
+import { injectable } from "tsyringe";
 import { merge } from "lodash";
 
 @injectable()

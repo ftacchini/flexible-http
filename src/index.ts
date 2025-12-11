@@ -1,3 +1,4 @@
+import "reflect-metadata";
 export * from "./http-abstract-source";
 export * from "./http-event-properties";
 export * from "./http-event";

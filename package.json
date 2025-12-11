@@ -30,11 +30,11 @@
     "body-parser": "^1.20.3",
     "express": "^4.21.1",
     "flexible-core": "^0.2.0",
-    "inversify": "^7.10.5",
     "lodash": "^4.17.21",
     "only": "0.0.2",
     "path-to-regexp": "^6.3.0",
-    "reflect-metadata": "^0.2.2"
+    "reflect-metadata": "^0.2.2",
+    "tsyringe": "^4.8.0"
   },
   "devDependencies": {
     "@types/ejs": "^3.1.5",

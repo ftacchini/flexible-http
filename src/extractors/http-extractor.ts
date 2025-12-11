@@ -2,17 +2,16 @@ import { FlexibleExtractor, RouteData, FlexibleResponse } from "flexible-core";
 import { HttpEventProperties } from "../http-event-properties";
 import { HttpEvent } from "../http-event";
 import { TypesHelper } from "../helpers/types-helper";
-import { inject, injectable } from "inversify";
+import { inject, injectable } from "tsyringe";
 import { HTTP_SOURCE_TYPES } from "../http-source-types";
 
-@injectable()
 export abstract class HttpExtractor implements FlexibleExtractor {
 
     public contextName?: string;
     private _name: string;
     public set name(value: string) {
         this._name = value;
-    } 
+    }
     public get name(): string {
         return this._name || this.contextName;
     }
@@ -21,7 +20,7 @@ export abstract class HttpExtractor implements FlexibleExtractor {
     private _type: any;
     public set type(value: any) {
         this._type = value;
-    } 
+    }
     public get type(): any {
         return this._type || this.contextType;
     }
@@ -36,8 +35,8 @@ export abstract class HttpExtractor implements FlexibleExtractor {
     };
 
     public async extractValue(
-        event: HttpEvent, 
-        response: FlexibleResponse, 
+        event: HttpEvent,
+        response: FlexibleResponse,
         filterBinnacle: {
             [key: string]: string;
         }): Promise<any> {
@@ -46,8 +45,8 @@ export abstract class HttpExtractor implements FlexibleExtractor {
     }
 
     protected abstract extractValueFromHttpEvent(
-        event: HttpEvent, 
-        response: FlexibleResponse, 
+        event: HttpEvent,
+        response: FlexibleResponse,
         filterBinnacle: {
             [key: string]: string;
         }): Promise<any>;

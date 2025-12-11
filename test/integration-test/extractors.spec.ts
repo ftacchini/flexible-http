@@ -5,9 +5,10 @@ import {
     FlexibleApp,
     FlexibleFrameworkModule,
     FlexibleAppBuilder,
-    SilentLoggerModule
+    SilentLoggerModule,
+    FlexibleContainer
 } from "flexible-core";
-import { ContainerModule } from "inversify";
+import { DependencyContainer } from "tsyringe";
 import {
     HttpGet,
     HttpPost,
@@ -91,16 +92,16 @@ describe("HTTP Extractors Integration Tests", () => {
     // Helper to create and start app
     async function createAndStartApp(): Promise<void> {
         const frameworkModule: FlexibleFrameworkModule = {
-            getInstance: () => framework,
-            container: new ContainerModule(() => { }),
-            isolatedContainer: new ContainerModule(() => { })
+            getInstance: (container: FlexibleContainer) => framework,
+            register: (container: DependencyContainer) => { },
+            registerIsolated: (container: DependencyContainer) => { }
         };
 
         const eventSource = HttpModule.builder()
             .withPort(EXTRACTOR_TEST_PORT)
             .build();
 
-        app = FlexibleAppBuilder.instance
+        app = FlexibleApp.builder()
             .withLogger(new SilentLoggerModule())
             .addEventSource(eventSource)
             .addFramework(frameworkModule)

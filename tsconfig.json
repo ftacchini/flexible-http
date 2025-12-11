@@ -20,7 +20,8 @@
     },
     "include": [
         "src/**/*",
-        "test/**/*"
+        "test/unit-test/**/*",
+        "test/integration-test/**/*"
     ],
     "exclude": [
         "node_modules"

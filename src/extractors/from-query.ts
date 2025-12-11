@@ -1,5 +1,5 @@
 import { HttpExtractor } from "./http-extractor";
-import { injectable, inject } from "inversify";
+import { injectable, inject } from "tsyringe";
 import { HTTP_SOURCE_TYPES } from "../http-source-types";
 import { TypesHelper } from "../helpers/types-helper";
 import { HttpEvent } from "../http-event";

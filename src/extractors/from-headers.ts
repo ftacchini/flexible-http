@@ -3,7 +3,7 @@ import { HttpEvent } from "../http-event";
 import { HttpExtractor } from "./http-extractor";
 import { HTTP_SOURCE_TYPES } from "../http-source-types";
 import { TypesHelper } from "../helpers/types-helper";
-import { inject, injectable } from "inversify";
+import { inject, injectable } from "tsyringe";
 
 /**
  * Extractor that retrieves HTTP request headers.
