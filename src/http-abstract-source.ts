@@ -3,7 +3,7 @@ import * as http from 'http';
 import * as https from 'https';
 import { FlexibleEventSource, FlexibleResponse, FlexibleLogger } from 'flexible-core';
 import { HttpEvent } from './http-event';
-import { injectable } from 'inversify';
+import { injectable } from 'tsyringe';
 import { ResponseProcessor } from './helpers/response-processor';
 
 export abstract class HttpAbstractSource implements FlexibleEventSource {
@@ -38,6 +38,7 @@ export abstract class HttpAbstractSource implements FlexibleEventSource {
             var httpEvent = new HttpEvent(req, res, requestId);
             try {
                 const startTime = Date.now();
+                this.logger.debug("Calling handler", { requestId });
                 var responses = await (this.handler && this.handler(httpEvent));
                 const duration = Date.now() - startTime;
 
@@ -47,17 +48,21 @@ export abstract class HttpAbstractSource implements FlexibleEventSource {
                     responseCount: responses?.length || 0
                 });
 
+                this.logger.debug("About to call responseProcessor.writeToResponse", { requestId });
                 await this.responseProcessor.writeToResponse(responses, res, next);
 
                 this.logger.debug("Response sent", {
                     requestId,
                     statusCode: res.statusCode
                 });
+
+                this.logger.debug("Request handling completed successfully", { requestId });
             }
             catch(err) {
                 this.logger.debug("Request failed", {
                     requestId,
-                    error: err instanceof Error ? err.message : 'Unknown error'
+                    error: err instanceof Error ? err.message : 'Unknown error',
+                    stack: err instanceof Error ? err.stack : undefined
                 });
                 next(err);
             }

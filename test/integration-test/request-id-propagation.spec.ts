@@ -1,7 +1,7 @@
 import "reflect-metadata";
 import "jasmine";
-import { DummyFramework, FlexibleApp, FlexibleFrameworkModule, FlexibleAppBuilder, FlexibleLogger } from "flexible-core";
-import { ContainerModule } from "inversify";
+import { DummyFramework, FlexibleApp, FlexibleFrameworkModule, FlexibleAppBuilder, FlexibleLogger, FlexibleContainer } from "flexible-core";
+import { DependencyContainer } from "tsyringe";
 import { HttpGet, HttpModule } from "../../src";
 import * as http from 'http';
 
@@ -121,9 +121,9 @@ describe("X-Request-ID Propagation", () => {
         });
 
         let frameworkModule: FlexibleFrameworkModule = {
-            getInstance: () => framework,
-            container: new ContainerModule(() => { }),
-            isolatedContainer: new ContainerModule(() => { })
+            getInstance: (container: FlexibleContainer) => framework,
+            register: (container: DependencyContainer) => { },
+            registerIsolated: (container: DependencyContainer) => { }
         };
 
         let eventSource = HttpModule.builder()
@@ -131,11 +131,11 @@ describe("X-Request-ID Propagation", () => {
             .build();
 
         let loggerModule = {
-            getInstance: () => captureLogger,
-            container: new ContainerModule(() => { })
+            getInstance: (container: FlexibleContainer) => captureLogger,
+            register: (container: DependencyContainer) => { }
         };
 
-        app = FlexibleAppBuilder.instance
+        app = FlexibleApp.builder()
             .withLogger(loggerModule)
             .addEventSource(eventSource)
             .addFramework(frameworkModule)
@@ -204,9 +204,9 @@ describe("X-Request-ID Propagation", () => {
         });
 
         let frameworkModule: FlexibleFrameworkModule = {
-            getInstance: () => framework,
-            container: new ContainerModule(() => { }),
-            isolatedContainer: new ContainerModule(() => { })
+            getInstance: (container: FlexibleContainer) => framework,
+            register: (container: DependencyContainer) => { },
+            registerIsolated: (container: DependencyContainer) => { }
         };
 
         let eventSource = HttpModule.builder()
@@ -214,11 +214,11 @@ describe("X-Request-ID Propagation", () => {
             .build();
 
         let loggerModule = {
-            getInstance: () => captureLogger,
-            container: new ContainerModule(() => { })
+            getInstance: (container: FlexibleContainer) => captureLogger,
+            register: (container: DependencyContainer) => { }
         };
 
-        app = FlexibleAppBuilder.instance
+        app = FlexibleApp.builder()
             .withLogger(loggerModule)
             .addEventSource(eventSource)
             .addFramework(frameworkModule)
@@ -281,9 +281,9 @@ describe("X-Request-ID Propagation", () => {
         });
 
         let frameworkModule: FlexibleFrameworkModule = {
-            getInstance: () => framework,
-            container: new ContainerModule(() => { }),
-            isolatedContainer: new ContainerModule(() => { })
+            getInstance: (container: FlexibleContainer) => framework,
+            register: (container: DependencyContainer) => { },
+            registerIsolated: (container: DependencyContainer) => { }
         };
 
         let eventSource = HttpModule.builder()
@@ -291,11 +291,11 @@ describe("X-Request-ID Propagation", () => {
             .build();
 
         let loggerModule = {
-            getInstance: () => captureLogger,
-            container: new ContainerModule(() => { })
+            getInstance: (container: FlexibleContainer) => captureLogger,
+            register: (container: DependencyContainer) => { }
         };
 
-        app = FlexibleAppBuilder.instance
+        app = FlexibleApp.builder()
             .withLogger(loggerModule)
             .addEventSource(eventSource)
             .addFramework(frameworkModule)

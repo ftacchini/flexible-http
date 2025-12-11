@@ -2,7 +2,7 @@ import { Application } from "express";
 import * as https from 'https';
 
 import { HttpAbstractSource } from './http-abstract-source';
-import { injectable } from 'inversify';
+import { injectable } from 'tsyringe';
 import { FlexibleLogger } from 'flexible-core';
 import { ResponseProcessor } from './helpers/response-processor';
 

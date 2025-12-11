@@ -4,14 +4,14 @@ import {
     DummyFramework,
     FlexibleApp,
     FlexibleFrameworkModule,
-    FlexibleAppBuilder,
-    SilentLoggerModule
+    SilentLoggerModule,
+    FlexibleContainer
 } from "flexible-core";
-import { ContainerModule } from "inversify";
+import { DependencyContainer } from "tsyringe";
 import {
     HttpGet,
     HttpPost,
-    HttpModuleBuilder,
+    HttpModule,
     JsonResponse,
     AcceptedResponse,
     HttpFileResponse,
@@ -109,16 +109,16 @@ describe("HTTP Responses Integration Tests", () => {
         }
 
         const frameworkModule: FlexibleFrameworkModule = {
-            getInstance: () => framework,
-            container: new ContainerModule(() => { }),
-            isolatedContainer: new ContainerModule(() => { })
+            getInstance: (container: FlexibleContainer) => framework,
+            register: (container: DependencyContainer) => { },
+            registerIsolated: (container: DependencyContainer) => { }
         };
 
         const eventSource = HttpModule.builder()
             .withPort(RESPONSE_TEST_PORT)
             .build();
 
-        app = FlexibleAppBuilder.instance
+        app = FlexibleApp.builder()
             .withLogger(new SilentLoggerModule())
             .addEventSource(eventSource)
             .addFramework(frameworkModule)
@@ -447,9 +447,9 @@ describe("HTTP Responses Integration Tests", () => {
             });
 
             const frameworkModule: FlexibleFrameworkModule = {
-                getInstance: () => framework,
-                container: new ContainerModule(() => { }),
-                isolatedContainer: new ContainerModule(() => { })
+                getInstance: (container: FlexibleContainer) => framework,
+                register: (container: DependencyContainer) => { },
+                registerIsolated: (container: DependencyContainer) => { }
             };
 
             const eventSource = HttpModule.builder()
@@ -457,7 +457,7 @@ describe("HTTP Responses Integration Tests", () => {
                 .withApplication(expressApp)
                 .build();
 
-            app = FlexibleAppBuilder.instance
+            app = FlexibleApp.builder()
                 .withLogger(new SilentLoggerModule())
                 .addEventSource(eventSource)
                 .addFramework(frameworkModule)
@@ -516,9 +516,9 @@ describe("HTTP Responses Integration Tests", () => {
             });
 
             const frameworkModule: FlexibleFrameworkModule = {
-                getInstance: () => framework,
-                container: new ContainerModule(() => { }),
-                isolatedContainer: new ContainerModule(() => { })
+                getInstance: (container: FlexibleContainer) => framework,
+                register: (container: DependencyContainer) => { },
+                registerIsolated: (container: DependencyContainer) => { }
             };
 
             const eventSource = HttpModule.builder()
@@ -526,7 +526,7 @@ describe("HTTP Responses Integration Tests", () => {
                 .withApplication(expressApp)
                 .build();
 
-            app = FlexibleAppBuilder.instance
+            app = FlexibleApp.builder()
                 .withLogger(new SilentLoggerModule())
                 .addEventSource(eventSource)
                 .addFramework(frameworkModule)

@@ -1,9 +1,11 @@
-import { FlexibleEventSourceModule, FlexibleEventSource } from "flexible-core";
-import { ContainerModule, Container } from "inversify";
+import { FlexibleEventSourceModule, FlexibleEventSource, FlexibleContainer } from "flexible-core";
+import { DependencyContainer } from "tsyringe";
+import { HttpModuleBuilder } from "./http-module-builder";
 export declare abstract class HttpModule implements FlexibleEventSourceModule {
-    readonly abstract isolatedContainer: ContainerModule;
+    static builder(): HttpModuleBuilder;
     private instanceCreated;
-    get container(): ContainerModule;
-    getInstance(container: Container): FlexibleEventSource;
-    protected abstract createInstance(container: Container): FlexibleEventSource;
+    register(container: DependencyContainer): void;
+    registerIsolated(container: DependencyContainer): void;
+    getInstance(container: FlexibleContainer): FlexibleEventSource;
+    protected abstract createInstance(container: FlexibleContainer): FlexibleEventSource;
 }

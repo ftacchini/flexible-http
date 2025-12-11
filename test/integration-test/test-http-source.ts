@@ -1,7 +1,7 @@
 import "reflect-metadata";
 import "jasmine";
-import { DummyFramework, FlexibleApp, FlexibleFrameworkModule, FlexibleAppBuilder, SilentLoggerModule } from "flexible-core";
-import { ContainerModule } from "inversify";
+import { DummyFramework, FlexibleApp, FlexibleFrameworkModule, FlexibleAppBuilder, SilentLoggerModule, FlexibleContainer } from "flexible-core";
+import { DependencyContainer } from "tsyringe";
 import { HttpGet, HttpModule, HttpMethod } from "../../src";
 import { JsonResponse } from "../../src/responses/json-response";
 import * as http from 'http';
@@ -61,14 +61,14 @@ export function testApp(protocol: string, port: number, moduleBuilder: () => Htt
         it("Should run correctly", async () => {
             //ARRANGE
             let frameworkModule: FlexibleFrameworkModule = {
-                getInstance: () => framework,
-                container: new ContainerModule(() => { }),
-                isolatedContainer: new ContainerModule(() => { })
+                getInstance: (container: FlexibleContainer) => framework,
+                register: (container: DependencyContainer) => { },
+                registerIsolated: (container: DependencyContainer) => { }
             };
 
             let eventSource = moduleBuilder();
 
-            app = FlexibleAppBuilder.instance
+            app = FlexibleApp.builder()
                 .withLogger(new SilentLoggerModule())
                 .addEventSource(eventSource)
                 .addFramework(frameworkModule)
@@ -84,14 +84,14 @@ export function testApp(protocol: string, port: number, moduleBuilder: () => Htt
         it("Should stop correctly", async () => {
             //ARRANGE
             let frameworkModule: FlexibleFrameworkModule = {
-                getInstance: () => framework,
-                container: new ContainerModule(() => { }),
-                isolatedContainer: new ContainerModule(() => { })
+                getInstance: (container: FlexibleContainer) => framework,
+                register: (container: DependencyContainer) => { },
+                registerIsolated: (container: DependencyContainer) => { }
             };
 
             let eventSource = moduleBuilder();
 
-            app = FlexibleAppBuilder.instance
+            app = FlexibleApp.builder()
                 .withLogger(new SilentLoggerModule())
                 .addEventSource(eventSource)
                 .addFramework(frameworkModule)
@@ -131,14 +131,14 @@ export function testApp(protocol: string, port: number, moduleBuilder: () => Htt
             });
 
             let frameworkModule: FlexibleFrameworkModule = {
-                getInstance: () => framework,
-                container: new ContainerModule(() => { }),
-                isolatedContainer: new ContainerModule(() => { })
+                getInstance: (container: FlexibleContainer) => framework,
+                register: (container: DependencyContainer) => { },
+                registerIsolated: (container: DependencyContainer) => { }
             };
 
             let eventSource = moduleBuilder();
 
-            app = FlexibleAppBuilder.instance
+            app = FlexibleApp.builder()
                 .withLogger(new SilentLoggerModule())
                 .addEventSource(eventSource)
                 .addFramework(frameworkModule)
@@ -179,14 +179,14 @@ export function testApp(protocol: string, port: number, moduleBuilder: () => Htt
             });
 
             let frameworkModule: FlexibleFrameworkModule = {
-                getInstance: () => framework,
-                container: new ContainerModule(() => { }),
-                isolatedContainer: new ContainerModule(() => { })
+                getInstance: (container: FlexibleContainer) => framework,
+                register: (container: DependencyContainer) => { },
+                registerIsolated: (container: DependencyContainer) => { }
             };
 
             let eventSource = moduleBuilder();
 
-            app = FlexibleAppBuilder.instance
+            app = FlexibleApp.builder()
                 .withLogger(new SilentLoggerModule())
                 .addEventSource(eventSource)
                 .addFramework(frameworkModule)
@@ -233,14 +233,14 @@ export function testApp(protocol: string, port: number, moduleBuilder: () => Htt
             });
 
             let frameworkModule: FlexibleFrameworkModule = {
-                getInstance: () => framework,
-                container: new ContainerModule(() => { }),
-                isolatedContainer: new ContainerModule(() => { })
+                getInstance: (container: FlexibleContainer) => framework,
+                register: (container: DependencyContainer) => { },
+                registerIsolated: (container: DependencyContainer) => { }
             };
 
             let eventSource = moduleBuilder();
 
-            app = FlexibleAppBuilder.instance
+            app = FlexibleApp.builder()
                 .withLogger(new SilentLoggerModule())
                 .addEventSource(eventSource)
                 .addFramework(frameworkModule)

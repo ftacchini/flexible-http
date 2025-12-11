@@ -1,5 +1,5 @@
-import { FLEXIBLE_APP_TYPES, FlexibleEventSource } from "flexible-core";
-import { ContainerModule, Container } from "inversify";
+import { FLEXIBLE_APP_TYPES, FlexibleEventSource, FlexibleContainer } from "flexible-core";
+import { DependencyContainer } from "tsyringe";
 import { Application } from 'express';
 import { HTTP_SOURCE_TYPES } from "./http-source-types";
 import { HttpSource } from "./http-source";
@@ -14,15 +14,10 @@ export class HttpSourceModule extends HttpModule {
         super();
     }
 
-    public get isolatedContainer(): ContainerModule {
-        // Empty module - binding happens in getInstance
-        return new ContainerModule(() => {});
-    }
-
-    protected createInstance(container: Container): FlexibleEventSource {
+    protected createInstance(container: FlexibleContainer): FlexibleEventSource {
         return new HttpSource(
-            container.get(HTTP_SOURCE_TYPES.HTTP_RESPONSE_PROCESSOR),
-            container.get(FLEXIBLE_APP_TYPES.LOGGER),
+            container.resolve(HTTP_SOURCE_TYPES.HTTP_RESPONSE_PROCESSOR),
+            container.resolve(FLEXIBLE_APP_TYPES.LOGGER),
             this.port,
             this.application
         );

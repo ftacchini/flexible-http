@@ -1,5 +1,5 @@
 import { HttpExtractor } from "./http-extractor";
-import { inject } from "inversify";
+import { inject, injectable } from "tsyringe";
 import { HTTP_SOURCE_TYPES } from "../http-source-types";
 import { TypesHelper } from "../helpers";
 import { HttpEvent } from "../http-event";
@@ -42,6 +42,7 @@ import { FlexibleResponse } from "flexible-core";
  * }
  * // Returns the user object from response.locals.user
  */
+@injectable()
 export class FromLocals extends HttpExtractor {
 
     /** When true, extracts all locals as an object; when false, extracts a specific named local variable */

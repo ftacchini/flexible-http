@@ -8,33 +8,39 @@ import {
     FlexibleContainer
 } from "flexible-core";
 import { DependencyContainer } from "tsyringe";
-import { HttpModule } from "../../src";
 import {
     HttpGet,
     HttpPost,
-    HttpDelete,
-    HttpPatch,
-    HttpHead,
-    HttpMethod,
-    HttpModuleBuilder
+    HttpModule,
+    JsonResponse
 } from "../../src";
 import * as http from 'http';
 
-const FILTER_TEST_PORT = 3020;
+const ERROR_TEST_PORT = 3030;
 
-describe("HTTP Filters Integration Tests", () => {
+describe("HTTP Error Handling Integration Tests", () => {
     let app: FlexibleApp;
     let framework: DummyFramework;
 
     beforeEach(async () => {
         framework = new DummyFramework();
+        // Ensure any previous app is stopped
+        if (app) {
+            try {
+                await app.stop();
+                await new Promise(resolve => setTimeout(resolve, 500));
+            } catch (e) {
+                // App might already be stopped
+            }
+            app = null;
+        }
     });
 
     afterEach(async () => {
         if (app) {
             await app.stop();
             // Give the port time to be released
-            await new Promise(resolve => setTimeout(resolve, 500));
+            await new Promise(resolve => setTimeout(resolve, 1000));
         }
     });
 
@@ -48,7 +54,7 @@ describe("HTTP Filters Integration Tests", () => {
         return new Promise((resolve, reject) => {
             const options: http.RequestOptions = {
                 hostname: 'localhost',
-                port: FILTER_TEST_PORT,
+                port: ERROR_TEST_PORT,
                 path: path,
                 method: method,
                 headers: headers || {}
@@ -85,14 +91,37 @@ describe("HTTP Filters Integration Tests", () => {
 
     // Helper to create and start app
     async function createAndStartApp(): Promise<void> {
+        // Ensure any existing app is stopped first
+        if (app) {
+            try {
+                await app.stop();
+                await new Promise(resolve => setTimeout(resolve, 1000));
+            } catch (e) {
+                // App might already be stopped
+            }
+        }
+
         const frameworkModule: FlexibleFrameworkModule = {
             getInstance: (container: FlexibleContainer) => framework,
             register: (container: DependencyContainer) => { },
             registerIsolated: (container: DependencyContainer) => { }
         };
 
+        // Create Express app with silent error handler to avoid polluting test output
+        const express = require('express');
+        const expressApp = express();
+
+        // Add silent error handler middleware (must be last)
+        expressApp.use((err: any, req: any, res: any, next: any) => {
+            // Silently handle errors - just send 500 status
+            if (!res.headersSent) {
+                res.status(500).send('Internal Server Error');
+            }
+        });
+
         const eventSource = HttpModule.builder()
-            .withPort(FILTER_TEST_PORT)
+            .withPort(ERROR_TEST_PORT)
+            .withApplication(expressApp)
             .build();
 
         app = FlexibleApp.builder()
@@ -105,11 +134,10 @@ describe("HTTP Filters Integration Tests", () => {
         await new Promise(resolve => setTimeout(resolve, 100));
     }
 
-    describe("HttpGet Filter", () => {
-        it("Should accept GET requests matching the route", async () => {
+    describe("Unexpected Exceptions", () => {
+        it("Should return 500 status code when middleware throws an Error", async () => {
             // ARRANGE
-            const path = '/get-endpoint';
-            const expected = { method: 'GET', success: true };
+            const path = '/throw-error';
 
             framework.addPipelineDefinition({
                 filterStack: [{
@@ -119,7 +147,7 @@ describe("HTTP Filters Integration Tests", () => {
                 middlewareStack: [{
                     activationContext: {
                         activate: async () => {
-                            return expected;
+                            throw new Error("Unexpected error occurred");
                         }
                     },
                     extractorRecipes: {}
@@ -132,14 +160,12 @@ describe("HTTP Filters Integration Tests", () => {
             const response = await makeRequest('GET', path);
 
             // ASSERT
-            expect(response.statusCode).toBe(200);
-            const result = JSON.parse(response.body);
-            expect(result).toEqual(expected);
+            expect(response.statusCode).toBe(500);
         });
 
-        it("Should reject POST requests to GET-only route", async () => {
+        it("Should return 500 status code when middleware throws a string", async () => {
             // ARRANGE
-            const path = '/get-only';
+            const path = '/throw-string';
 
             framework.addPipelineDefinition({
                 filterStack: [{
@@ -149,7 +175,7 @@ describe("HTTP Filters Integration Tests", () => {
                 middlewareStack: [{
                     activationContext: {
                         activate: async () => {
-                            return { success: true };
+                            throw "String error message";
                         }
                     },
                     extractorRecipes: {}
@@ -159,19 +185,187 @@ describe("HTTP Filters Integration Tests", () => {
             await createAndStartApp();
 
             // ACT
-            const response = await makeRequest('POST', path);
+            const response = await makeRequest('GET', path);
 
             // ASSERT
-            // Should get 404 since no route matches POST to this path
-            expect(response.statusCode).toBe(404);
+            expect(response.statusCode).toBe(500);
         });
-    });
 
-    describe("HttpPost Filter", () => {
-        it("Should accept POST requests matching the route", async () => {
+        it("Should return 500 status code when middleware throws an object", async () => {
             // ARRANGE
-            const path = '/post-endpoint';
-            const expected = { method: 'POST', success: true };
+            const path = '/throw-object';
+
+            framework.addPipelineDefinition({
+                filterStack: [{
+                    type: HttpGet,
+                    configuration: <any>{ path: path }
+                }],
+                middlewareStack: [{
+                    activationContext: {
+                        activate: async () => {
+                            throw { code: 'CUSTOM_ERROR', message: 'Something went wrong' };
+                        }
+                    },
+                    extractorRecipes: {}
+                }]
+            });
+
+            await createAndStartApp();
+
+            // ACT
+            const response = await makeRequest('GET', path);
+
+            // ASSERT
+            expect(response.statusCode).toBe(500);
+        });
+
+        it("Should return 500 status code when middleware throws null", async () => {
+            // ARRANGE
+            const path = '/throw-null';
+
+            framework.addPipelineDefinition({
+                filterStack: [{
+                    type: HttpGet,
+                    configuration: <any>{ path: path }
+                }],
+                middlewareStack: [{
+                    activationContext: {
+                        activate: async () => {
+                            throw null;
+                        }
+                    },
+                    extractorRecipes: {}
+                }]
+            });
+
+            await createAndStartApp();
+
+            // ACT
+            const response = await makeRequest('GET', path);
+
+            // ASSERT
+            expect(response.statusCode).toBe(500);
+        });
+
+        it("Should return 500 status code when middleware throws undefined", async () => {
+            // ARRANGE
+            const path = '/throw-undefined';
+
+            framework.addPipelineDefinition({
+                filterStack: [{
+                    type: HttpGet,
+                    configuration: <any>{ path: path }
+                }],
+                middlewareStack: [{
+                    activationContext: {
+                        activate: async () => {
+                            throw undefined;
+                        }
+                    },
+                    extractorRecipes: {}
+                }]
+            });
+
+            await createAndStartApp();
+
+            // ACT
+            const response = await makeRequest('GET', path);
+
+            // ASSERT
+            expect(response.statusCode).toBe(500);
+        });
+
+        it("Should return 500 status code when middleware has a runtime error (TypeError)", async () => {
+            // ARRANGE
+            const path = '/runtime-error';
+
+            framework.addPipelineDefinition({
+                filterStack: [{
+                    type: HttpGet,
+                    configuration: <any>{ path: path }
+                }],
+                middlewareStack: [{
+                    activationContext: {
+                        activate: async () => {
+                            // Intentionally cause a TypeError
+                            const obj: any = null;
+                            return obj.property.nested;
+                        }
+                    },
+                    extractorRecipes: {}
+                }]
+            });
+
+            await createAndStartApp();
+
+            // ACT
+            const response = await makeRequest('GET', path);
+
+            // ASSERT
+            expect(response.statusCode).toBe(500);
+        });
+
+        it("Should return 500 status code when middleware has a ReferenceError", async () => {
+            // ARRANGE
+            const path = '/reference-error';
+
+            framework.addPipelineDefinition({
+                filterStack: [{
+                    type: HttpGet,
+                    configuration: <any>{ path: path }
+                }],
+                middlewareStack: [{
+                    activationContext: {
+                        activate: async () => {
+                            // Intentionally reference undefined variable
+                            // @ts-ignore - intentionally causing error
+                            return undefinedVariable.someProperty;
+                        }
+                    },
+                    extractorRecipes: {}
+                }]
+            });
+
+            await createAndStartApp();
+
+            // ACT
+            const response = await makeRequest('GET', path);
+
+            // ASSERT
+            expect(response.statusCode).toBe(500);
+        });
+
+        it("Should return 500 status code when Promise rejects in middleware", async () => {
+            // ARRANGE
+            const path = '/promise-rejection';
+
+            framework.addPipelineDefinition({
+                filterStack: [{
+                    type: HttpGet,
+                    configuration: <any>{ path: path }
+                }],
+                middlewareStack: [{
+                    activationContext: {
+                        activate: async () => {
+                            return Promise.reject(new Error("Promise was rejected"));
+                        }
+                    },
+                    extractorRecipes: {}
+                }]
+            });
+
+            await createAndStartApp();
+
+            // ACT
+            const response = await makeRequest('GET', path);
+
+            // ASSERT
+            expect(response.statusCode).toBe(500);
+        });
+
+        it("Should return 500 status code for POST requests with exceptions", async () => {
+            // ARRANGE
+            const path = '/post-error';
 
             framework.addPipelineDefinition({
                 filterStack: [{
@@ -181,7 +375,7 @@ describe("HTTP Filters Integration Tests", () => {
                 middlewareStack: [{
                     activationContext: {
                         activate: async () => {
-                            return expected;
+                            throw new Error("POST request failed");
                         }
                     },
                     extractorRecipes: {}
@@ -194,14 +388,146 @@ describe("HTTP Filters Integration Tests", () => {
             const response = await makeRequest('POST', path, { data: 'test' });
 
             // ASSERT
-            expect(response.statusCode).toBe(200);
-            const result = JSON.parse(response.body);
-            expect(result).toEqual(expected);
+            expect(response.statusCode).toBe(500);
         });
 
-        it("Should reject GET requests to POST-only route", async () => {
+        it("Should return 500 when error occurs in second middleware of chain", async () => {
             // ARRANGE
-            const path = '/post-only';
+            const path = '/chained-error';
+
+            framework.addPipelineDefinition({
+                filterStack: [{
+                    type: HttpGet,
+                    configuration: <any>{ path: path }
+                }],
+                middlewareStack: [
+                    {
+                        // First middleware succeeds
+                        activationContext: {
+                            activate: async () => {
+                                return new JsonResponse({ step: 1 });
+                            }
+                        },
+                        extractorRecipes: {}
+                    },
+                    {
+                        // Second middleware throws error
+                        activationContext: {
+                            activate: async () => {
+                                throw new Error("Error in second middleware");
+                            }
+                        },
+                        extractorRecipes: {}
+                    }
+                ]
+            });
+
+            await createAndStartApp();
+
+            // ACT
+            const response = await makeRequest('GET', path);
+
+            // ASSERT
+            expect(response.statusCode).toBe(500);
+        });
+
+        it("Should return 500 when custom Error subclass is thrown", async () => {
+            // ARRANGE
+            const path = '/custom-error';
+
+            class CustomApplicationError extends Error {
+                constructor(message: string, public code: string) {
+                    super(message);
+                    this.name = 'CustomApplicationError';
+                }
+            }
+
+            framework.addPipelineDefinition({
+                filterStack: [{
+                    type: HttpGet,
+                    configuration: <any>{ path: path }
+                }],
+                middlewareStack: [{
+                    activationContext: {
+                        activate: async () => {
+                            throw new CustomApplicationError("Custom error occurred", "ERR_CUSTOM");
+                        }
+                    },
+                    extractorRecipes: {}
+                }]
+            });
+
+            await createAndStartApp();
+
+            // ACT
+            const response = await makeRequest('GET', path);
+
+            // ASSERT
+            expect(response.statusCode).toBe(500);
+        });
+
+        it("Should return 500 when synchronous exception occurs", async () => {
+            // ARRANGE
+            const path = '/sync-error';
+
+            framework.addPipelineDefinition({
+                filterStack: [{
+                    type: HttpGet,
+                    configuration: <any>{ path: path }
+                }],
+                middlewareStack: [{
+                    activationContext: {
+                        activate: () => {
+                            // Synchronous throw (not async)
+                            throw new Error("Synchronous error");
+                        }
+                    },
+                    extractorRecipes: {}
+                }]
+            });
+
+            await createAndStartApp();
+
+            // ACT
+            const response = await makeRequest('GET', path);
+
+            // ASSERT
+            expect(response.statusCode).toBe(500);
+        });
+    });
+
+    describe("Error Handling with Different HTTP Methods", () => {
+        it("Should return 500 for GET request with exception", async () => {
+            // ARRANGE
+            const path = '/get-error';
+
+            framework.addPipelineDefinition({
+                filterStack: [{
+                    type: HttpGet,
+                    configuration: <any>{ path: path }
+                }],
+                middlewareStack: [{
+                    activationContext: {
+                        activate: async () => {
+                            throw new Error("GET error");
+                        }
+                    },
+                    extractorRecipes: {}
+                }]
+            });
+
+            await createAndStartApp();
+
+            // ACT
+            const response = await makeRequest('GET', path);
+
+            // ASSERT
+            expect(response.statusCode).toBe(500);
+        });
+
+        it("Should return 500 for POST request with exception", async () => {
+            // ARRANGE
+            const path = '/post-error-method';
 
             framework.addPipelineDefinition({
                 filterStack: [{
@@ -211,7 +537,38 @@ describe("HTTP Filters Integration Tests", () => {
                 middlewareStack: [{
                     activationContext: {
                         activate: async () => {
-                            return { success: true };
+                            throw new Error("POST error");
+                        }
+                    },
+                    extractorRecipes: {}
+                }]
+            });
+
+            await createAndStartApp();
+
+            // ACT
+            const response = await makeRequest('POST', path, { test: 'data' });
+
+            // ASSERT
+            expect(response.statusCode).toBe(500);
+        });
+    });
+
+    describe("Successful Requests (Control Tests)", () => {
+        it("Should return 200 when no exception occurs", async () => {
+            // ARRANGE
+            const path = '/success';
+            const expectedData = { status: 'success' };
+
+            framework.addPipelineDefinition({
+                filterStack: [{
+                    type: HttpGet,
+                    configuration: <any>{ path: path }
+                }],
+                middlewareStack: [{
+                    activationContext: {
+                        activate: async () => {
+                            return new JsonResponse(expectedData);
                         }
                     },
                     extractorRecipes: {}
@@ -224,56 +581,32 @@ describe("HTTP Filters Integration Tests", () => {
             const response = await makeRequest('GET', path);
 
             // ASSERT
-            // Should get 404 since no route matches GET to this path
-            expect(response.statusCode).toBe(404);
-        });
-    });
-
-    describe("HttpDelete Filter", () => {
-        it("Should accept DELETE requests matching the route", async () => {
-            // ARRANGE
-            const path = '/delete-endpoint';
-            const expected = { method: 'DELETE', success: true };
-
-            framework.addPipelineDefinition({
-                filterStack: [{
-                    type: HttpDelete,
-                    configuration: <any>{ path: path }
-                }],
-                middlewareStack: [{
-                    activationContext: {
-                        activate: async () => {
-                            return expected;
-                        }
-                    },
-                    extractorRecipes: {}
-                }]
-            });
-
-            await createAndStartApp();
-
-            // ACT
-            const response = await makeRequest('DELETE', path);
-
-            // ASSERT
             expect(response.statusCode).toBe(200);
             const result = JSON.parse(response.body);
-            expect(result).toEqual(expected);
+            expect(result).toEqual(expectedData);
         });
 
-        it("Should reject GET requests to DELETE-only route", async () => {
+        it("Should return 200 when middleware completes successfully after handling potential error", async () => {
             // ARRANGE
-            const path = '/delete-only';
+            const path = '/handled-error';
+            const expectedData = { status: 'recovered' };
 
             framework.addPipelineDefinition({
                 filterStack: [{
-                    type: HttpDelete,
+                    type: HttpGet,
                     configuration: <any>{ path: path }
                 }],
                 middlewareStack: [{
                     activationContext: {
                         activate: async () => {
-                            return { success: true };
+                            try {
+                                // Simulate an operation that might fail
+                                const obj: any = null;
+                                obj.property.nested;
+                            } catch (error) {
+                                // Handle the error gracefully
+                                return new JsonResponse(expectedData);
+                            }
                         }
                     },
                     extractorRecipes: {}
@@ -286,364 +619,9 @@ describe("HTTP Filters Integration Tests", () => {
             const response = await makeRequest('GET', path);
 
             // ASSERT
-            // Should get 404 since no route matches GET to this path
-            expect(response.statusCode).toBe(404);
-        });
-    });
-
-    describe("HttpPatch Filter", () => {
-        it("Should accept PATCH requests matching the route", async () => {
-            // ARRANGE
-            const path = '/patch-endpoint';
-            const expected = { method: 'PATCH', success: true };
-
-            framework.addPipelineDefinition({
-                filterStack: [{
-                    type: HttpPatch,
-                    configuration: <any>{ path: path }
-                }],
-                middlewareStack: [{
-                    activationContext: {
-                        activate: async () => {
-                            return expected;
-                        }
-                    },
-                    extractorRecipes: {}
-                }]
-            });
-
-            await createAndStartApp();
-
-            // ACT
-            const response = await makeRequest('PATCH', path, { data: 'update' });
-
-            // ASSERT
             expect(response.statusCode).toBe(200);
             const result = JSON.parse(response.body);
-            expect(result).toEqual(expected);
-        });
-
-        it("Should reject POST requests to PATCH-only route", async () => {
-            // ARRANGE
-            const path = '/patch-only';
-
-            framework.addPipelineDefinition({
-                filterStack: [{
-                    type: HttpPatch,
-                    configuration: <any>{ path: path }
-                }],
-                middlewareStack: [{
-                    activationContext: {
-                        activate: async () => {
-                            return { success: true };
-                        }
-                    },
-                    extractorRecipes: {}
-                }]
-            });
-
-            await createAndStartApp();
-
-            // ACT
-            const response = await makeRequest('POST', path);
-
-            // ASSERT
-            // Should get 404 since no route matches POST to this path
-            expect(response.statusCode).toBe(404);
-        });
-    });
-
-    describe("HttpHead Filter", () => {
-        it("Should accept HEAD requests matching the route", async () => {
-            // ARRANGE
-            const path = '/head-endpoint';
-
-            framework.addPipelineDefinition({
-                filterStack: [{
-                    type: HttpHead,
-                    configuration: <any>{ path: path }
-                }],
-                middlewareStack: [{
-                    activationContext: {
-                        activate: async () => {
-                            return { method: 'HEAD', success: true };
-                        }
-                    },
-                    extractorRecipes: {}
-                }]
-            });
-
-            await createAndStartApp();
-
-            // ACT
-            const response = await makeRequest('HEAD', path);
-
-            // ASSERT
-            expect(response.statusCode).toBe(200);
-            // HEAD requests should not return a body
-            expect(response.body).toBe('');
-        });
-
-        it("Should reject GET requests to HEAD-only route", async () => {
-            // ARRANGE
-            const path = '/head-only';
-
-            framework.addPipelineDefinition({
-                filterStack: [{
-                    type: HttpHead,
-                    configuration: <any>{ path: path }
-                }],
-                middlewareStack: [{
-                    activationContext: {
-                        activate: async () => {
-                            return { success: true };
-                        }
-                    },
-                    extractorRecipes: {}
-                }]
-            });
-
-            await createAndStartApp();
-
-            // ACT
-            const response = await makeRequest('GET', path);
-
-            // ASSERT
-            // Should get 404 since no route matches GET to this path
-            expect(response.statusCode).toBe(404);
-        });
-    });
-
-    describe("Path Matching", () => {
-        it("Should reject requests with non-matching paths", async () => {
-            // ARRANGE
-            const path = '/specific-path';
-
-            framework.addPipelineDefinition({
-                filterStack: [{
-                    type: HttpGet,
-                    configuration: <any>{ path: path }
-                }],
-                middlewareStack: [{
-                    activationContext: {
-                        activate: async () => {
-                            return { success: true };
-                        }
-                    },
-                    extractorRecipes: {}
-                }]
-            });
-
-            await createAndStartApp();
-
-            // ACT
-            const response = await makeRequest('GET', '/different-path');
-
-            // ASSERT
-            // Should get 404 since path doesn't match
-            expect(response.statusCode).toBe(404);
-        });
-
-        it("Should handle path parameters correctly", async () => {
-            // ARRANGE
-            const path = '/users/:userId';
-            const expected = { userId: '123' };
-
-            framework.addPipelineDefinition({
-                filterStack: [{
-                    type: HttpGet,
-                    configuration: <any>{ path: path }
-                }],
-                middlewareStack: [{
-                    activationContext: {
-                        activate: async () => {
-                            return expected;
-                        }
-                    },
-                    extractorRecipes: {}
-                }]
-            });
-
-            await createAndStartApp();
-
-            // ACT
-            const response = await makeRequest('GET', '/users/123');
-
-            // ASSERT
-            expect(response.statusCode).toBe(200);
-            const result = JSON.parse(response.body);
-            expect(result).toEqual(expected);
-        });
-    });
-
-    describe("Nested Route Path Composition", () => {
-        it("Should correctly combine nested route paths", async () => {
-            // ARRANGE
-            const path1 = '/api';
-            const path2 = '/users';
-            const expected = { nested: true, success: true };
-
-            framework.addPipelineDefinition({
-                filterStack: [
-                    {
-                        type: HttpMethod,
-                        configuration: <any>{ path: path1 }
-                    },
-                    {
-                        type: HttpGet,
-                        configuration: <any>{ path: path2 }
-                    }
-                ],
-                middlewareStack: [{
-                    activationContext: {
-                        activate: async () => {
-                            return expected;
-                        }
-                    },
-                    extractorRecipes: {}
-                }]
-            });
-
-            await createAndStartApp();
-
-            // ACT
-            const response = await makeRequest('GET', '/api/users');
-
-            // ASSERT
-            expect(response.statusCode).toBe(200);
-            const result = JSON.parse(response.body);
-            expect(result).toEqual(expected);
-        });
-
-        it("Should handle multiple nested paths with parameters", async () => {
-            // ARRANGE
-            const path1 = '/api/v1';
-            const path2 = '/users/:userId';
-            const path3 = '/posts/:postId';
-            const expected = { deeply: 'nested', success: true };
-
-            framework.addPipelineDefinition({
-                filterStack: [
-                    {
-                        type: HttpMethod,
-                        configuration: <any>{ path: path1 }
-                    },
-                    {
-                        type: HttpMethod,
-                        configuration: <any>{ path: path2 }
-                    },
-                    {
-                        type: HttpGet,
-                        configuration: <any>{ path: path3 }
-                    }
-                ],
-                middlewareStack: [{
-                    activationContext: {
-                        activate: async () => {
-                            return expected;
-                        }
-                    },
-                    extractorRecipes: {}
-                }]
-            });
-
-            await createAndStartApp();
-
-            // ACT
-            const response = await makeRequest('GET', '/api/v1/users/123/posts/456');
-
-            // ASSERT
-            expect(response.statusCode).toBe(200);
-            const result = JSON.parse(response.body);
-            expect(result).toEqual(expected);
-        });
-
-        it("Should reject requests that don't match nested path structure", async () => {
-            // ARRANGE
-            const path1 = '/api';
-            const path2 = '/users';
-
-            framework.addPipelineDefinition({
-                filterStack: [
-                    {
-                        type: HttpMethod,
-                        configuration: <any>{ path: path1 }
-                    },
-                    {
-                        type: HttpGet,
-                        configuration: <any>{ path: path2 }
-                    }
-                ],
-                middlewareStack: [{
-                    activationContext: {
-                        activate: async () => {
-                            return { success: true };
-                        }
-                    },
-                    extractorRecipes: {}
-                }]
-            });
-
-            await createAndStartApp();
-
-            // ACT - Try to access just /api without /users
-            const response = await makeRequest('GET', '/api');
-
-            // ASSERT
-            // Should get 404 since the full nested path is required
-            expect(response.statusCode).toBe(404);
-        });
-    });
-
-    describe("Multiple Routes", () => {
-        it("Should handle multiple routes with different methods", async () => {
-            // ARRANGE
-            const path = '/resource';
-            const getExpected = { method: 'GET' };
-            const postExpected = { method: 'POST' };
-
-            framework.addPipelineDefinition({
-                filterStack: [{
-                    type: HttpGet,
-                    configuration: <any>{ path: path }
-                }],
-                middlewareStack: [{
-                    activationContext: {
-                        activate: async () => {
-                            return getExpected;
-                        }
-                    },
-                    extractorRecipes: {}
-                }]
-            });
-
-            framework.addPipelineDefinition({
-                filterStack: [{
-                    type: HttpPost,
-                    configuration: <any>{ path: path }
-                }],
-                middlewareStack: [{
-                    activationContext: {
-                        activate: async () => {
-                            return postExpected;
-                        }
-                    },
-                    extractorRecipes: {}
-                }]
-            });
-
-            await createAndStartApp();
-
-            // ACT
-            const getResponse = await makeRequest('GET', path);
-            const postResponse = await makeRequest('POST', path);
-
-            // ASSERT
-            expect(getResponse.statusCode).toBe(200);
-            expect(JSON.parse(getResponse.body)).toEqual(getExpected);
-
-            expect(postResponse.statusCode).toBe(200);
-            expect(JSON.parse(postResponse.body)).toEqual(postExpected);
+            expect(result).toEqual(expectedData);
         });
     });
 });

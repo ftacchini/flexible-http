@@ -1,6 +1,6 @@
 import { HttpExtractor } from "./http-extractor";
 import { HTTP_SOURCE_TYPES } from "../http-source-types";
-import { inject, injectable } from "inversify";
+import { inject, injectable } from "tsyringe";
 import { TypesHelper } from "../helpers/types-helper";
 import { HttpEvent } from "../http-event";
 import { FlexibleResponse } from "flexible-core";
