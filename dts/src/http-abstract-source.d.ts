@@ -4,6 +4,9 @@ import * as https from 'https';
 import { FlexibleEventSource, FlexibleResponse, FlexibleLogger } from 'flexible-core';
 import { HttpEvent } from './http-event';
 import { ResponseProcessor } from './helpers/response-processor';
+export interface HttpSourceConfig {
+    enableCancellation?: boolean;
+}
 export declare abstract class HttpAbstractSource implements FlexibleEventSource {
     protected responseProcessor: ResponseProcessor;
     protected logger: FlexibleLogger;
@@ -12,7 +15,8 @@ export declare abstract class HttpAbstractSource implements FlexibleEventSource 
     protected server: https.Server | http.Server;
     private handler;
     private initialized;
-    constructor(responseProcessor: ResponseProcessor, logger: FlexibleLogger, port: number, application?: express.Application);
+    private config;
+    constructor(responseProcessor: ResponseProcessor, logger: FlexibleLogger, port: number, application?: express.Application, config?: HttpSourceConfig);
     protected abstract createServer(application: express.Application): https.Server | http.Server;
     private initialize;
     run(): Promise<any>;

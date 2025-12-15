@@ -1,7 +1,7 @@
 import { Application } from "express";
 import * as https from 'https';
 
-import { HttpAbstractSource } from './http-abstract-source';
+import { HttpAbstractSource, HttpSourceConfig } from './http-abstract-source';
 import { injectable } from 'tsyringe';
 import { FlexibleLogger } from 'flexible-core';
 import { ResponseProcessor } from './helpers/response-processor';
@@ -16,8 +16,9 @@ export class HttpsSource extends HttpAbstractSource {
         logger: FlexibleLogger,
         port: number,
         private credentials: https.ServerOptions,
-        application: Application = null) {
-        super(responseProcessor, logger, port, application);
+        application: Application = null,
+        config?: HttpSourceConfig) {
+        super(responseProcessor, logger, port, application, config);
     }
 
     protected createServer(application: Application): https.Server {

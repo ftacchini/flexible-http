@@ -3,6 +3,7 @@ import express from "express";
 import * as https from 'https';
 import { HttpsSourceModule } from "./https-source-module";
 import { HttpModule } from "./http-module";
+import { HttpSourceConfig } from "./http-abstract-source";
 
 
 const DEFAULT_HTTP_PORT: number = 8080;
@@ -13,6 +14,7 @@ export class HttpModuleBuilder {
     private port: number;
     private application: express.Application;
     private credentials: https.ServerOptions;
+    private config: HttpSourceConfig;
 
     constructor() {
         this.reset();
@@ -33,6 +35,11 @@ export class HttpModuleBuilder {
         return this;
     }
 
+    public withConfig(config: HttpSourceConfig): this {
+        this.config = config;
+        return this;
+    }
+
     public build() {
 
         let httpModule: HttpModule;
@@ -42,13 +49,15 @@ export class HttpModuleBuilder {
             httpModule =  new HttpsSourceModule(
                 this.port || DEFAULT_HTTPS_PORT,
                 application,
-                this.credentials
+                this.credentials,
+                this.config
             )
         }
         else {
             httpModule =  new HttpSourceModule(
                 this.port || DEFAULT_HTTP_PORT,
-                application
+                application,
+                this.config
             )
         }
 
@@ -60,5 +69,6 @@ export class HttpModuleBuilder {
         this.port = null;
         this.application = null;
         this.credentials = null;
+        this.config = null;
     }
 }

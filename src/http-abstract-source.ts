@@ -6,17 +6,26 @@ import { HttpEvent } from './http-event';
 import { injectable } from 'tsyringe';
 import { ResponseProcessor } from './helpers/response-processor';
 
+export interface HttpSourceConfig {
+    enableCancellation?: boolean;
+}
+
 export abstract class HttpAbstractSource implements FlexibleEventSource {
 
     protected server: https.Server | http.Server;
     private handler: (event: HttpEvent) => Promise<FlexibleResponse[]>;
     private initialized: boolean = false;
+    private config: HttpSourceConfig;
 
     constructor(
         protected responseProcessor: ResponseProcessor,
         protected logger: FlexibleLogger,
         protected port: number,
-        private application: express.Application = express()) {
+        private application: express.Application = express(),
+        config?: HttpSourceConfig) {
+        this.config = {
+            enableCancellation: config?.enableCancellation ?? true
+        };
     }
 
     protected abstract createServer(application: express.Application): https.Server | http.Server;
@@ -35,7 +44,20 @@ export abstract class HttpAbstractSource implements FlexibleEventSource {
                 clientIp: req.ip || 'unknown'
             });
 
-            var httpEvent = new HttpEvent(req, res, requestId);
+            // Create AbortController for cancellation support if enabled
+            let abortController: AbortController | undefined;
+            if (this.config.enableCancellation) {
+                abortController = new AbortController();
+
+                // Listen to request close event and abort the signal
+                req.on('close', () => {
+                    if (!res.writableEnded) {
+                        abortController!.abort();
+                    }
+                });
+            }
+
+            var httpEvent = new HttpEvent(req, res, requestId, abortController?.signal);
             try {
                 const startTime = Date.now();
                 this.logger.debug("Calling handler", { requestId });

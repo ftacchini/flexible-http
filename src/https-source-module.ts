@@ -5,13 +5,15 @@ import * as https from 'https';
 import { HTTP_SOURCE_TYPES } from "./http-source-types";
 import { HttpModule } from "./http-module";
 import { HttpsSource } from "./https-source";
+import { HttpSourceConfig } from "./http-abstract-source";
 
 export class HttpsSourceModule extends HttpModule {
 
     constructor(
         private port: number,
         private application: Application,
-        private credentials: https.ServerOptions
+        private credentials: https.ServerOptions,
+        private config?: HttpSourceConfig
     ) {
         super();
     }
@@ -22,7 +24,8 @@ export class HttpsSourceModule extends HttpModule {
             container.resolve(FLEXIBLE_APP_TYPES.LOGGER),
             this.port,
             this.credentials,
-            this.application
+            this.application,
+            this.config
         );
     }
 }

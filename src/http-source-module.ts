@@ -4,12 +4,14 @@ import { Application } from 'express';
 import { HTTP_SOURCE_TYPES } from "./http-source-types";
 import { HttpSource } from "./http-source";
 import { HttpModule } from "./http-module";
+import { HttpSourceConfig } from "./http-abstract-source";
 
 export class HttpSourceModule extends HttpModule {
 
     constructor(
         private port: number,
-        private application: Application
+        private application: Application,
+        private config?: HttpSourceConfig
     ) {
         super();
     }
@@ -19,7 +21,8 @@ export class HttpSourceModule extends HttpModule {
             container.resolve(HTTP_SOURCE_TYPES.HTTP_RESPONSE_PROCESSOR),
             container.resolve(FLEXIBLE_APP_TYPES.LOGGER),
             this.port,
-            this.application
+            this.application,
+            this.config
         );
     }
 }

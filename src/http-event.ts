@@ -8,14 +8,17 @@ export class HttpEvent implements FlexibleEvent{
     public readonly routeData: RouteData<HttpEventProperties>;
     public readonly requestId?: string;
     public readonly sourceIp: string;
+    public readonly cancellationToken?: AbortSignal;
 
     constructor(
         private request: Request,
         private response: Response,
-        requestId?: string) {
+        requestId?: string,
+        cancellationToken?: AbortSignal) {
 
         this.requestId = requestId;
         this.sourceIp = request.ip || request.socket?.remoteAddress || 'unknown';
+        this.cancellationToken = cancellationToken;
 
         this.routeData = {
             method: request.method.toLowerCase(),
