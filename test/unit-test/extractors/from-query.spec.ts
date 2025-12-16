@@ -51,11 +51,7 @@ describe("FromQuery Extractor", () => {
             fromQuery.allQuery = true;
 
             // Act
-            const result = await fromQuery.extractValueFromHttpEvent(
-                mockHttpEvent,
-                mockFlexibleResponse,
-                {}
-            );
+            const result = await fromQuery.extractValueFromHttpEvent(mockHttpEvent, mockFlexibleResponse, {}, {});
 
             // Assert
             expect(result).toEqual(queryParams);
@@ -69,11 +65,7 @@ describe("FromQuery Extractor", () => {
             fromQuery.allQuery = true;
 
             // Act
-            const result = await fromQuery.extractValueFromHttpEvent(
-                mockHttpEvent,
-                mockFlexibleResponse,
-                {}
-            );
+            const result = await fromQuery.extractValueFromHttpEvent(mockHttpEvent, mockFlexibleResponse, {}, {});
 
             // Assert
             expect(result).toEqual(queryParams);
@@ -93,11 +85,7 @@ describe("FromQuery Extractor", () => {
             fromQuery.allQuery = true;
 
             // Act
-            const result = await fromQuery.extractValueFromHttpEvent(
-                mockHttpEvent,
-                mockFlexibleResponse,
-                {}
-            );
+            const result = await fromQuery.extractValueFromHttpEvent(mockHttpEvent, mockFlexibleResponse, {}, {});
 
             // Assert
             expect(result).toEqual(queryParams);
@@ -110,11 +98,7 @@ describe("FromQuery Extractor", () => {
             fromQuery.allQuery = true;
 
             // Act
-            const result = await fromQuery.extractValueFromHttpEvent(
-                mockHttpEvent,
-                mockFlexibleResponse,
-                {}
-            );
+            const result = await fromQuery.extractValueFromHttpEvent(mockHttpEvent, mockFlexibleResponse, {}, {});
 
             // Assert
             expect(result).toEqual({});
@@ -128,11 +112,7 @@ describe("FromQuery Extractor", () => {
             fromQuery.allQuery = true;
 
             // Act
-            const result = await fromQuery.extractValueFromHttpEvent(
-                mockHttpEvent,
-                mockFlexibleResponse,
-                {}
-            );
+            const result = await fromQuery.extractValueFromHttpEvent(mockHttpEvent, mockFlexibleResponse, {}, {});
 
             // Assert
             expect(result).toEqual(queryParams);
@@ -146,11 +126,7 @@ describe("FromQuery Extractor", () => {
             fromQuery.allQuery = true;
 
             // Act
-            const result = await fromQuery.extractValueFromHttpEvent(
-                mockHttpEvent,
-                mockFlexibleResponse,
-                {}
-            );
+            const result = await fromQuery.extractValueFromHttpEvent(mockHttpEvent, mockFlexibleResponse, {}, {});
 
             // Assert
             expect(result).toEqual(queryParams);
@@ -164,11 +140,7 @@ describe("FromQuery Extractor", () => {
             fromQuery.allQuery = true;
 
             // Act
-            const result = await fromQuery.extractValueFromHttpEvent(
-                mockHttpEvent,
-                mockFlexibleResponse,
-                {}
-            );
+            const result = await fromQuery.extractValueFromHttpEvent(mockHttpEvent, mockFlexibleResponse, {}, {});
 
             // Assert
             expect(result).toEqual(queryParams);
@@ -182,11 +154,7 @@ describe("FromQuery Extractor", () => {
             fromQuery.allQuery = true;
 
             // Act
-            const result = await fromQuery.extractValueFromHttpEvent(
-                mockHttpEvent,
-                mockFlexibleResponse,
-                {}
-            );
+            const result = await fromQuery.extractValueFromHttpEvent(mockHttpEvent, mockFlexibleResponse, {}, {});
 
             // Assert
             expect(result).toEqual(queryParams);
@@ -203,11 +171,7 @@ describe("FromQuery Extractor", () => {
             fromQuery.allQuery = false;
 
             // Act
-            const result = await fromQuery.extractValueFromHttpEvent(
-                mockHttpEvent,
-                mockFlexibleResponse,
-                {}
-            );
+            const result = await fromQuery.extractValueFromHttpEvent(mockHttpEvent, mockFlexibleResponse, {}, {});
 
             // Assert
             expect(result).toBe("test");
@@ -222,11 +186,7 @@ describe("FromQuery Extractor", () => {
             fromQuery.allQuery = false;
 
             // Act
-            const result = await fromQuery.extractValueFromHttpEvent(
-                mockHttpEvent,
-                mockFlexibleResponse,
-                {}
-            );
+            const result = await fromQuery.extractValueFromHttpEvent(mockHttpEvent, mockFlexibleResponse, {}, {});
 
             // Assert
             expect(result).toBe("10");
@@ -241,11 +201,7 @@ describe("FromQuery Extractor", () => {
             fromQuery.allQuery = false;
 
             // Act
-            const result = await fromQuery.extractValueFromHttpEvent(
-                mockHttpEvent,
-                mockFlexibleResponse,
-                {}
-            );
+            const result = await fromQuery.extractValueFromHttpEvent(mockHttpEvent, mockFlexibleResponse, {}, {});
 
             // Assert
             expect(result).toBe("typescript");
@@ -260,11 +216,7 @@ describe("FromQuery Extractor", () => {
             fromQuery.allQuery = false;
 
             // Act
-            const result = await fromQuery.extractValueFromHttpEvent(
-                mockHttpEvent,
-                mockFlexibleResponse,
-                {}
-            );
+            const result = await fromQuery.extractValueFromHttpEvent(mockHttpEvent, mockFlexibleResponse, {}, {});
 
             // Assert
             expect(result).toBeUndefined();
@@ -285,11 +237,7 @@ describe("FromQuery Extractor", () => {
             fromQuery.allQuery = false;
 
             // Act
-            const result = await fromQuery.extractValueFromHttpEvent(
-                mockHttpEvent,
-                mockFlexibleResponse,
-                {}
-            );
+            const result = await fromQuery.extractValueFromHttpEvent(mockHttpEvent, mockFlexibleResponse, {}, {});
 
             // Assert
             expect(result).toBe("price");
@@ -304,11 +252,7 @@ describe("FromQuery Extractor", () => {
             fromQuery.allQuery = false;
 
             // Act
-            const result = await fromQuery.extractValueFromHttpEvent(
-                mockHttpEvent,
-                mockFlexibleResponse,
-                {}
-            );
+            const result = await fromQuery.extractValueFromHttpEvent(mockHttpEvent, mockFlexibleResponse, {}, {});
 
             // Assert
             expect(result).toBe("user@example.com");
@@ -323,11 +267,7 @@ describe("FromQuery Extractor", () => {
             fromQuery.allQuery = false;
 
             // Act
-            const result = await fromQuery.extractValueFromHttpEvent(
-                mockHttpEvent,
-                mockFlexibleResponse,
-                {}
-            );
+            const result = await fromQuery.extractValueFromHttpEvent(mockHttpEvent, mockFlexibleResponse, {}, {});
 
             // Assert
             expect(result).toBe("42");
@@ -342,11 +282,7 @@ describe("FromQuery Extractor", () => {
             fromQuery.allQuery = false;
 
             // Act
-            const result = await fromQuery.extractValueFromHttpEvent(
-                mockHttpEvent,
-                mockFlexibleResponse,
-                {}
-            );
+            const result = await fromQuery.extractValueFromHttpEvent(mockHttpEvent, mockFlexibleResponse, {}, {});
 
             // Assert
             expect(result).toEqual(["javascript", "typescript"]);
@@ -364,11 +300,7 @@ describe("FromQuery Extractor", () => {
             fromQuery.allQuery = false;
 
             // Act
-            const result = await fromQuery.extractValueFromHttpEvent(
-                mockHttpEvent,
-                mockFlexibleResponse,
-                {}
-            );
+            const result = await fromQuery.extractValueFromHttpEvent(mockHttpEvent, mockFlexibleResponse, {}, {});
 
             // Assert
             expect(result).toBeUndefined();
@@ -383,11 +315,7 @@ describe("FromQuery Extractor", () => {
             fromQuery.allQuery = true;
 
             // Act
-            const result = await fromQuery.extractValueFromHttpEvent(
-                mockHttpEvent,
-                mockFlexibleResponse,
-                {}
-            );
+            const result = await fromQuery.extractValueFromHttpEvent(mockHttpEvent, mockFlexibleResponse, {}, {});
 
             // Assert
             expect(result).toBeUndefined();
@@ -400,11 +328,7 @@ describe("FromQuery Extractor", () => {
             fromQuery.allQuery = true;
 
             // Act
-            const result = await fromQuery.extractValueFromHttpEvent(
-                mockHttpEvent,
-                mockFlexibleResponse,
-                {}
-            );
+            const result = await fromQuery.extractValueFromHttpEvent(mockHttpEvent, mockFlexibleResponse, {}, {});
 
             // Assert
             expect(result).toEqual({});
@@ -419,11 +343,7 @@ describe("FromQuery Extractor", () => {
             fromQuery.allQuery = false;
 
             // Act
-            const result = await fromQuery.extractValueFromHttpEvent(
-                mockHttpEvent,
-                mockFlexibleResponse,
-                {}
-            );
+            const result = await fromQuery.extractValueFromHttpEvent(mockHttpEvent, mockFlexibleResponse, {}, {});
 
             // Assert
             expect(result).toBeUndefined();
@@ -438,11 +358,7 @@ describe("FromQuery Extractor", () => {
             // Don't set name
 
             // Act
-            const result = await fromQuery.extractValueFromHttpEvent(
-                mockHttpEvent,
-                mockFlexibleResponse,
-                {}
-            );
+            const result = await fromQuery.extractValueFromHttpEvent(mockHttpEvent, mockFlexibleResponse, {}, {});
 
             // Assert
             expect(result).toBeUndefined();
@@ -459,11 +375,7 @@ describe("FromQuery Extractor", () => {
             fromQuery.allQuery = false;
 
             // Act
-            const result = await fromQuery.extractValueFromHttpEvent(
-                mockHttpEvent,
-                mockFlexibleResponse,
-                {}
-            );
+            const result = await fromQuery.extractValueFromHttpEvent(mockHttpEvent, mockFlexibleResponse, {}, {});
 
             // Assert
             expect(result).toBe("");
@@ -478,11 +390,7 @@ describe("FromQuery Extractor", () => {
             fromQuery.allQuery = false;
 
             // Act
-            const result = await fromQuery.extractValueFromHttpEvent(
-                mockHttpEvent,
-                mockFlexibleResponse,
-                {}
-            );
+            const result = await fromQuery.extractValueFromHttpEvent(mockHttpEvent, mockFlexibleResponse, {}, {});
 
             // Assert
             expect(result).toBe("  ");
@@ -497,11 +405,7 @@ describe("FromQuery Extractor", () => {
             fromQuery.allQuery = false;
 
             // Act
-            const result = await fromQuery.extractValueFromHttpEvent(
-                mockHttpEvent,
-                mockFlexibleResponse,
-                {}
-            );
+            const result = await fromQuery.extractValueFromHttpEvent(mockHttpEvent, mockFlexibleResponse, {}, {});
 
             // Assert
             expect(result).toBe("0");
@@ -516,11 +420,7 @@ describe("FromQuery Extractor", () => {
             fromQuery.allQuery = false;
 
             // Act
-            const result = await fromQuery.extractValueFromHttpEvent(
-                mockHttpEvent,
-                mockFlexibleResponse,
-                {}
-            );
+            const result = await fromQuery.extractValueFromHttpEvent(mockHttpEvent, mockFlexibleResponse, {}, {});
 
             // Assert
             expect(result).toBe("https%3A%2F%2Fexample.com");
@@ -535,11 +435,7 @@ describe("FromQuery Extractor", () => {
             fromQuery.allQuery = false;
 
             // Act
-            const result = await fromQuery.extractValueFromHttpEvent(
-                mockHttpEvent,
-                mockFlexibleResponse,
-                {}
-            );
+            const result = await fromQuery.extractValueFromHttpEvent(mockHttpEvent, mockFlexibleResponse, {}, {});
 
             // Assert
             expect(result).toEqual(["active", "verified"]);
@@ -553,11 +449,7 @@ describe("FromQuery Extractor", () => {
             fromQuery.allQuery = true;
 
             // Act
-            const result = await fromQuery.extractValueFromHttpEvent(
-                mockHttpEvent,
-                mockFlexibleResponse,
-                {}
-            );
+            const result = await fromQuery.extractValueFromHttpEvent(mockHttpEvent, mockFlexibleResponse, {}, {});
 
             // Assert
             expect(result).toEqual(queryParams);
@@ -572,11 +464,7 @@ describe("FromQuery Extractor", () => {
             fromQuery.allQuery = false;
 
             // Act
-            const result = await fromQuery.extractValueFromHttpEvent(
-                mockHttpEvent,
-                mockFlexibleResponse,
-                {}
-            );
+            const result = await fromQuery.extractValueFromHttpEvent(mockHttpEvent, mockFlexibleResponse, {}, {});
 
             // Assert
             expect(result).toBeNull();
@@ -591,11 +479,7 @@ describe("FromQuery Extractor", () => {
             fromQuery.allQuery = false;
 
             // Act
-            const result = await fromQuery.extractValueFromHttpEvent(
-                mockHttpEvent,
-                mockFlexibleResponse,
-                {}
-            );
+            const result = await fromQuery.extractValueFromHttpEvent(mockHttpEvent, mockFlexibleResponse, {}, {});
 
             // Assert
             expect(result).toBeUndefined();
@@ -611,11 +495,7 @@ describe("FromQuery Extractor", () => {
             fromQuery.allQuery = true;
 
             // Act
-            const result = await fromQuery.extractValueFromHttpEvent(
-                mockHttpEvent,
-                mockFlexibleResponse,
-                {}
-            );
+            const result = await fromQuery.extractValueFromHttpEvent(mockHttpEvent, mockFlexibleResponse, {}, {});
 
             // Assert
             expect(result).toEqual(queryParams);
@@ -635,11 +515,7 @@ describe("FromQuery Extractor", () => {
             fromQuery.allQuery = true;
 
             // Act
-            const result = await fromQuery.extractValueFromHttpEvent(
-                mockHttpEvent,
-                mockFlexibleResponse,
-                {}
-            );
+            const result = await fromQuery.extractValueFromHttpEvent(mockHttpEvent, mockFlexibleResponse, {}, {});
 
             // Assert
             expect(result).toEqual(queryParams);
@@ -654,11 +530,7 @@ describe("FromQuery Extractor", () => {
             fromQuery.allQuery = false;
 
             // Act
-            const result = await fromQuery.extractValueFromHttpEvent(
-                mockHttpEvent,
-                mockFlexibleResponse,
-                {}
-            );
+            const result = await fromQuery.extractValueFromHttpEvent(mockHttpEvent, mockFlexibleResponse, {}, {});
 
             // Assert
             expect(result).toBe("createdAt");

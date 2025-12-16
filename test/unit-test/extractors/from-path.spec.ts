@@ -59,11 +59,7 @@ describe("FromPath Extractor", () => {
             filterBinnacle.path = "/users/:userId/posts/:postId";
 
             // Act
-            const result = await fromPath.extractValueFromHttpEvent(
-                mockHttpEvent,
-                mockFlexibleResponse,
-                filterBinnacle
-            );
+            const result = await fromPath.extractValueFromHttpEvent(mockHttpEvent, mockFlexibleResponse, filterBinnacle, {});
 
             // Assert
             expect(result).toEqual({ userId: "123", postId: "456" });
@@ -77,11 +73,7 @@ describe("FromPath Extractor", () => {
             filterBinnacle.path = "/users/:id";
 
             // Act
-            const result = await fromPath.extractValueFromHttpEvent(
-                mockHttpEvent,
-                mockFlexibleResponse,
-                filterBinnacle
-            );
+            const result = await fromPath.extractValueFromHttpEvent(mockHttpEvent, mockFlexibleResponse, filterBinnacle, {});
 
             // Assert
             expect(result).toEqual({ id: "42" });
@@ -95,11 +87,7 @@ describe("FromPath Extractor", () => {
             filterBinnacle.path = "/api/v1/organizations/:orgId/projects/:projectId/tasks/:taskId";
 
             // Act
-            const result = await fromPath.extractValueFromHttpEvent(
-                mockHttpEvent,
-                mockFlexibleResponse,
-                filterBinnacle
-            );
+            const result = await fromPath.extractValueFromHttpEvent(mockHttpEvent, mockFlexibleResponse, filterBinnacle, {});
 
             // Assert
             expect(result).toEqual({
@@ -117,11 +105,7 @@ describe("FromPath Extractor", () => {
             filterBinnacle.path = "/users";
 
             // Act
-            const result = await fromPath.extractValueFromHttpEvent(
-                mockHttpEvent,
-                mockFlexibleResponse,
-                filterBinnacle
-            );
+            const result = await fromPath.extractValueFromHttpEvent(mockHttpEvent, mockFlexibleResponse, filterBinnacle, {});
 
             // Assert
             expect(result).toEqual({});
@@ -135,11 +119,7 @@ describe("FromPath Extractor", () => {
             filterBinnacle.path = "/files/:filename";
 
             // Act
-            const result = await fromPath.extractValueFromHttpEvent(
-                mockHttpEvent,
-                mockFlexibleResponse,
-                filterBinnacle
-            );
+            const result = await fromPath.extractValueFromHttpEvent(mockHttpEvent, mockFlexibleResponse, filterBinnacle, {});
 
             // Assert
             expect(result).toEqual({ filename: "my-file-name.txt" });
@@ -153,11 +133,7 @@ describe("FromPath Extractor", () => {
             filterBinnacle.path = "/items/:itemId";
 
             // Act
-            const result = await fromPath.extractValueFromHttpEvent(
-                mockHttpEvent,
-                mockFlexibleResponse,
-                filterBinnacle
-            );
+            const result = await fromPath.extractValueFromHttpEvent(mockHttpEvent, mockFlexibleResponse, filterBinnacle, {});
 
             // Assert
             expect(result).toEqual({ itemId: "12345" });
@@ -174,11 +150,7 @@ describe("FromPath Extractor", () => {
             filterBinnacle.path = "/users/:userId/posts/:postId";
 
             // Act
-            const result = await fromPath.extractValueFromHttpEvent(
-                mockHttpEvent,
-                mockFlexibleResponse,
-                filterBinnacle
-            );
+            const result = await fromPath.extractValueFromHttpEvent(mockHttpEvent, mockFlexibleResponse, filterBinnacle, {});
 
             // Assert
             expect(result).toBe("123");
@@ -193,11 +165,7 @@ describe("FromPath Extractor", () => {
             filterBinnacle.path = "/users/:userId/posts/:postId";
 
             // Act
-            const result = await fromPath.extractValueFromHttpEvent(
-                mockHttpEvent,
-                mockFlexibleResponse,
-                filterBinnacle
-            );
+            const result = await fromPath.extractValueFromHttpEvent(mockHttpEvent, mockFlexibleResponse, filterBinnacle, {});
 
             // Assert
             expect(result).toBe("456");
@@ -212,11 +180,7 @@ describe("FromPath Extractor", () => {
             filterBinnacle.path = "/users/:id";
 
             // Act
-            const result = await fromPath.extractValueFromHttpEvent(
-                mockHttpEvent,
-                mockFlexibleResponse,
-                filterBinnacle
-            );
+            const result = await fromPath.extractValueFromHttpEvent(mockHttpEvent, mockFlexibleResponse, filterBinnacle, {});
 
             // Assert
             expect(result).toBe("42");
@@ -231,11 +195,7 @@ describe("FromPath Extractor", () => {
             filterBinnacle.path = "/users/:id";
 
             // Act
-            const result = await fromPath.extractValueFromHttpEvent(
-                mockHttpEvent,
-                mockFlexibleResponse,
-                filterBinnacle
-            );
+            const result = await fromPath.extractValueFromHttpEvent(mockHttpEvent, mockFlexibleResponse, filterBinnacle, {});
 
             // Assert
             expect(result).toBeUndefined();
@@ -250,11 +210,7 @@ describe("FromPath Extractor", () => {
             filterBinnacle.path = "/api/v1/organizations/:orgId/projects/:projectId/tasks/:taskId";
 
             // Act
-            const result = await fromPath.extractValueFromHttpEvent(
-                mockHttpEvent,
-                mockFlexibleResponse,
-                filterBinnacle
-            );
+            const result = await fromPath.extractValueFromHttpEvent(mockHttpEvent, mockFlexibleResponse, filterBinnacle, {});
 
             // Assert
             expect(result).toBe("proj456");
@@ -269,11 +225,7 @@ describe("FromPath Extractor", () => {
             filterBinnacle.path = "/files/:filename";
 
             // Act
-            const result = await fromPath.extractValueFromHttpEvent(
-                mockHttpEvent,
-                mockFlexibleResponse,
-                filterBinnacle
-            );
+            const result = await fromPath.extractValueFromHttpEvent(mockHttpEvent, mockFlexibleResponse, filterBinnacle, {});
 
             // Assert
             expect(result).toBe("document-2024.pdf");
@@ -289,11 +241,7 @@ describe("FromPath Extractor", () => {
             filterBinnacle.path = "/users/:id";
 
             // Act
-            const result = await fromPath.extractValueFromHttpEvent(
-                mockHttpEvent,
-                mockFlexibleResponse,
-                filterBinnacle
-            );
+            const result = await fromPath.extractValueFromHttpEvent(mockHttpEvent, mockFlexibleResponse, filterBinnacle, {});
 
             // Assert
             expect(result).toBeNull();
@@ -307,11 +255,7 @@ describe("FromPath Extractor", () => {
             filterBinnacle.path = "/users/:id";
 
             // Act
-            const result = await fromPath.extractValueFromHttpEvent(
-                mockHttpEvent,
-                mockFlexibleResponse,
-                filterBinnacle
-            );
+            const result = await fromPath.extractValueFromHttpEvent(mockHttpEvent, mockFlexibleResponse, filterBinnacle, {});
 
             // Assert
             expect(result).toBeNull();
@@ -326,11 +270,7 @@ describe("FromPath Extractor", () => {
             filterBinnacle.path = "/users/:userId/posts/:postId";
 
             // Act
-            const result = await fromPath.extractValueFromHttpEvent(
-                mockHttpEvent,
-                mockFlexibleResponse,
-                filterBinnacle
-            );
+            const result = await fromPath.extractValueFromHttpEvent(mockHttpEvent, mockFlexibleResponse, filterBinnacle, {});
 
             // Assert
             expect(result).toBeNull();
@@ -344,11 +284,7 @@ describe("FromPath Extractor", () => {
             filterBinnacle.path = "/users/:id";
 
             // Act
-            const result = await fromPath.extractValueFromHttpEvent(
-                mockHttpEvent,
-                mockFlexibleResponse,
-                filterBinnacle
-            );
+            const result = await fromPath.extractValueFromHttpEvent(mockHttpEvent, mockFlexibleResponse, filterBinnacle, {});
 
             // Assert
             expect(result).toBeNull();
@@ -364,11 +300,7 @@ describe("FromPath Extractor", () => {
             // Act & Assert
             // The pathToRegexp function throws when path is undefined
             await expectAsync(
-                fromPath.extractValueFromHttpEvent(
-                    mockHttpEvent,
-                    mockFlexibleResponse,
-                    filterBinnacle
-                )
+                fromPath.extractValueFromHttpEvent(mockHttpEvent, mockFlexibleResponse, filterBinnacle, {})
             ).toBeRejected();
         });
     });
@@ -383,11 +315,7 @@ describe("FromPath Extractor", () => {
             filterBinnacle.path = "/users/:id";
 
             // Act
-            const result = await fromPath.extractValueFromHttpEvent(
-                mockHttpEvent,
-                mockFlexibleResponse,
-                filterBinnacle
-            );
+            const result = await fromPath.extractValueFromHttpEvent(mockHttpEvent, mockFlexibleResponse, filterBinnacle, {});
 
             // Assert
             expect(result).toBeNull();
@@ -402,11 +330,7 @@ describe("FromPath Extractor", () => {
             filterBinnacle.path = "/:id";
 
             // Act
-            const result = await fromPath.extractValueFromHttpEvent(
-                mockHttpEvent,
-                mockFlexibleResponse,
-                filterBinnacle
-            );
+            const result = await fromPath.extractValueFromHttpEvent(mockHttpEvent, mockFlexibleResponse, filterBinnacle, {});
 
             // Assert
             expect(result).toBe("123");
@@ -421,11 +345,7 @@ describe("FromPath Extractor", () => {
             filterBinnacle.path = "/users/:id";
 
             // Act
-            const result = await fromPath.extractValueFromHttpEvent(
-                mockHttpEvent,
-                mockFlexibleResponse,
-                filterBinnacle
-            );
+            const result = await fromPath.extractValueFromHttpEvent(mockHttpEvent, mockFlexibleResponse, filterBinnacle, {});
 
             // Assert
             // path-to-regexp may or may not match trailing slashes depending on configuration
@@ -442,11 +362,7 @@ describe("FromPath Extractor", () => {
             filterBinnacle.path = "/files/:filename";
 
             // Act
-            const result = await fromPath.extractValueFromHttpEvent(
-                mockHttpEvent,
-                mockFlexibleResponse,
-                filterBinnacle
-            );
+            const result = await fromPath.extractValueFromHttpEvent(mockHttpEvent, mockFlexibleResponse, filterBinnacle, {});
 
             // Assert
             expect(result).toBe("my%20file.txt");
@@ -462,11 +378,7 @@ describe("FromPath Extractor", () => {
             filterBinnacle.path = "/resources/:resourceId";
 
             // Act
-            const result = await fromPath.extractValueFromHttpEvent(
-                mockHttpEvent,
-                mockFlexibleResponse,
-                filterBinnacle
-            );
+            const result = await fromPath.extractValueFromHttpEvent(mockHttpEvent, mockFlexibleResponse, filterBinnacle, {});
 
             // Assert
             expect(result).toBe(uuid);
@@ -480,11 +392,7 @@ describe("FromPath Extractor", () => {
             filterBinnacle.path = "/api/:first/:second";
 
             // Act
-            const result = await fromPath.extractValueFromHttpEvent(
-                mockHttpEvent,
-                mockFlexibleResponse,
-                filterBinnacle
-            );
+            const result = await fromPath.extractValueFromHttpEvent(mockHttpEvent, mockFlexibleResponse, filterBinnacle, {});
 
             // Assert
             expect(result).toEqual({ first: "123", second: "456" });
@@ -501,11 +409,7 @@ describe("FromPath Extractor", () => {
             filterBinnacle.path = "/api/v1/users/:userId/settings";
 
             // Act
-            const result = await fromPath.extractValueFromHttpEvent(
-                mockHttpEvent,
-                mockFlexibleResponse,
-                filterBinnacle
-            );
+            const result = await fromPath.extractValueFromHttpEvent(mockHttpEvent, mockFlexibleResponse, filterBinnacle, {});
 
             // Assert
             expect(result).toBe("user123");
@@ -519,11 +423,7 @@ describe("FromPath Extractor", () => {
             filterBinnacle.path = "/v1/countries/:country/states/:state/cities/:city";
 
             // Act
-            const result = await fromPath.extractValueFromHttpEvent(
-                mockHttpEvent,
-                mockFlexibleResponse,
-                filterBinnacle
-            );
+            const result = await fromPath.extractValueFromHttpEvent(mockHttpEvent, mockFlexibleResponse, filterBinnacle, {});
 
             // Assert
             expect(result).toEqual({

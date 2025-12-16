@@ -72,9 +72,10 @@ export class FromBody extends HttpExtractor {
     public async extractValueFromHttpEvent(
         event: HttpEvent,
         response: FlexibleResponse,
-        filterBinnacle: {
-            [key: string]: string;
-        }): Promise<any> {
+        filterBinnacle: { [key: string]: string },
+        contextBinnacle: { [key: string]: any }
+            
+        ): Promise<any> {
 
         this.bodyType || (this.bodyType = HttpBodyType.Json);
 

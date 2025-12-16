@@ -43,9 +43,12 @@ export class ExpressRequest implements FlexibleExtractor {
         };
     };
 
-    public async extractValue(event: HttpEvent, response: FlexibleResponse, filterBinnacle: {
-        [key: string]: string;
-    }): Promise<any> {
+    public async extractValue(
+        event: HttpEvent,
+        response: FlexibleResponse,
+        filterBinnacle: { [key: string]: string },
+        contextBinnacle: { [key: string]: any }
+    ): Promise<any> {
         return event.data.request;
     }
 

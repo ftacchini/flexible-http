@@ -56,9 +56,10 @@ export class FromLocals extends HttpExtractor {
     public async extractValueFromHttpEvent(
         event: HttpEvent,
         response: FlexibleResponse,
-        filterBinnacle: {
-            [key: string]: string;
-        }): Promise<any> {
+        filterBinnacle: { [key: string]: string },
+        contextBinnacle: { [key: string]: any }
+            
+        ): Promise<any> {
             return event.data.response &&
                 event.data.response.locals &&
                 (this.allLocals ?

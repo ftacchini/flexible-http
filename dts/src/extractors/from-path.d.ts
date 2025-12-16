@@ -9,6 +9,8 @@ export declare class FromPath extends HttpExtractor {
     constructor(typesHelper: TypesHelper, routeProcessor: RouteProcessor);
     extractValueFromHttpEvent(event: HttpEvent, response: FlexibleResponse, filterBinnacle: {
         [key: string]: string;
+    }, contextBinnacle: {
+        [key: string]: any;
     }): Promise<any>;
     private isKey;
 }

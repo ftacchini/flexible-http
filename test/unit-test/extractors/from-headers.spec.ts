@@ -55,11 +55,7 @@ describe("FromHeaders Extractor", () => {
             fromHeaders.allHeaders = true;
 
             // Act
-            const result = await fromHeaders.extractValueFromHttpEvent(
-                mockHttpEvent,
-                mockFlexibleResponse,
-                {}
-            );
+            const result = await fromHeaders.extractValueFromHttpEvent(mockHttpEvent, mockFlexibleResponse, {}, {});
 
             // Assert
             expect(result).toEqual(headers);
@@ -72,11 +68,7 @@ describe("FromHeaders Extractor", () => {
             fromHeaders.allHeaders = true;
 
             // Act
-            const result = await fromHeaders.extractValueFromHttpEvent(
-                mockHttpEvent,
-                mockFlexibleResponse,
-                {}
-            );
+            const result = await fromHeaders.extractValueFromHttpEvent(mockHttpEvent, mockFlexibleResponse, {}, {});
 
             // Assert
             expect(result).toEqual({});
@@ -93,11 +85,7 @@ describe("FromHeaders Extractor", () => {
             fromHeaders.allHeaders = true;
 
             // Act
-            const result = await fromHeaders.extractValueFromHttpEvent(
-                mockHttpEvent,
-                mockFlexibleResponse,
-                {}
-            );
+            const result = await fromHeaders.extractValueFromHttpEvent(mockHttpEvent, mockFlexibleResponse, {}, {});
 
             // Assert
             expect(result).toEqual(headers);
@@ -118,11 +106,7 @@ describe("FromHeaders Extractor", () => {
             fromHeaders.allHeaders = false;
 
             // Act
-            const result = await fromHeaders.extractValueFromHttpEvent(
-                mockHttpEvent,
-                mockFlexibleResponse,
-                {}
-            );
+            const result = await fromHeaders.extractValueFromHttpEvent(mockHttpEvent, mockFlexibleResponse, {}, {});
 
             // Assert
             expect(result).toBe("Bearer token123");
@@ -140,11 +124,7 @@ describe("FromHeaders Extractor", () => {
             fromHeaders.allHeaders = false;
 
             // Act
-            const result = await fromHeaders.extractValueFromHttpEvent(
-                mockHttpEvent,
-                mockFlexibleResponse,
-                {}
-            );
+            const result = await fromHeaders.extractValueFromHttpEvent(mockHttpEvent, mockFlexibleResponse, {}, {});
 
             // Assert
             expect(result).toBe("secret-key");
@@ -163,11 +143,7 @@ describe("FromHeaders Extractor", () => {
             fromHeaders.allHeaders = false;
 
             // Act
-            const result = await fromHeaders.extractValueFromHttpEvent(
-                mockHttpEvent,
-                mockFlexibleResponse,
-                {}
-            );
+            const result = await fromHeaders.extractValueFromHttpEvent(mockHttpEvent, mockFlexibleResponse, {}, {});
 
             // Assert
             expect(result).toBe("application/json");
@@ -184,11 +160,7 @@ describe("FromHeaders Extractor", () => {
             fromHeaders.allHeaders = false;
 
             // Act
-            const result = await fromHeaders.extractValueFromHttpEvent(
-                mockHttpEvent,
-                mockFlexibleResponse,
-                {}
-            );
+            const result = await fromHeaders.extractValueFromHttpEvent(mockHttpEvent, mockFlexibleResponse, {}, {});
 
             // Assert
             expect(result).toEqual(["cookie1=value1", "cookie2=value2"]);
@@ -207,11 +179,7 @@ describe("FromHeaders Extractor", () => {
             fromHeaders.allHeaders = false;
 
             // Act
-            const result = await fromHeaders.extractValueFromHttpEvent(
-                mockHttpEvent,
-                mockFlexibleResponse,
-                {}
-            );
+            const result = await fromHeaders.extractValueFromHttpEvent(mockHttpEvent, mockFlexibleResponse, {}, {});
 
             // Assert
             expect(result).toBeUndefined();
@@ -230,11 +198,7 @@ describe("FromHeaders Extractor", () => {
             fromHeaders.allHeaders = false;
 
             // Act
-            const result = await fromHeaders.extractValueFromHttpEvent(
-                mockHttpEvent,
-                mockFlexibleResponse,
-                {}
-            );
+            const result = await fromHeaders.extractValueFromHttpEvent(mockHttpEvent, mockFlexibleResponse, {}, {});
 
             // Assert
             expect(result).toBeUndefined();
@@ -253,11 +217,7 @@ describe("FromHeaders Extractor", () => {
             fromHeaders.allHeaders = false;
 
             // Act
-            const result = await fromHeaders.extractValueFromHttpEvent(
-                mockHttpEvent,
-                mockFlexibleResponse,
-                {}
-            );
+            const result = await fromHeaders.extractValueFromHttpEvent(mockHttpEvent, mockFlexibleResponse, {}, {});
 
             // Assert
             expect(result).toBeNull();
@@ -274,11 +234,7 @@ describe("FromHeaders Extractor", () => {
             // Don't set name
 
             // Act
-            const result = await fromHeaders.extractValueFromHttpEvent(
-                mockHttpEvent,
-                mockFlexibleResponse,
-                {}
-            );
+            const result = await fromHeaders.extractValueFromHttpEvent(mockHttpEvent, mockFlexibleResponse, {}, {});
 
             // Assert
             expect(result).toBeUndefined();
@@ -298,11 +254,7 @@ describe("FromHeaders Extractor", () => {
             fromHeaders.allHeaders = false;
 
             // Act
-            const result = await fromHeaders.extractValueFromHttpEvent(
-                mockHttpEvent,
-                mockFlexibleResponse,
-                {}
-            );
+            const result = await fromHeaders.extractValueFromHttpEvent(mockHttpEvent, mockFlexibleResponse, {}, {});
 
             // Assert
             expect(result).toBe("Bearer token123");
@@ -320,11 +272,7 @@ describe("FromHeaders Extractor", () => {
             fromHeaders.allHeaders = false;
 
             // Act
-            const result = await fromHeaders.extractValueFromHttpEvent(
-                mockHttpEvent,
-                mockFlexibleResponse,
-                {}
-            );
+            const result = await fromHeaders.extractValueFromHttpEvent(mockHttpEvent, mockFlexibleResponse, {}, {});
 
             // Assert
             expect(result).toBe("application/json");
@@ -343,11 +291,7 @@ describe("FromHeaders Extractor", () => {
             fromHeaders.allHeaders = false;
 
             // Act
-            const result = await fromHeaders.extractValueFromHttpEvent(
-                mockHttpEvent,
-                mockFlexibleResponse,
-                {}
-            );
+            const result = await fromHeaders.extractValueFromHttpEvent(mockHttpEvent, mockFlexibleResponse, {}, {});
 
             // Assert
             expect(result).toBe("Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9");
@@ -364,11 +308,7 @@ describe("FromHeaders Extractor", () => {
             fromHeaders.allHeaders = false;
 
             // Act
-            const result = await fromHeaders.extractValueFromHttpEvent(
-                mockHttpEvent,
-                mockFlexibleResponse,
-                {}
-            );
+            const result = await fromHeaders.extractValueFromHttpEvent(mockHttpEvent, mockFlexibleResponse, {}, {});
 
             // Assert
             expect(result).toBe("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36");
@@ -385,11 +325,7 @@ describe("FromHeaders Extractor", () => {
             fromHeaders.allHeaders = false;
 
             // Act
-            const result = await fromHeaders.extractValueFromHttpEvent(
-                mockHttpEvent,
-                mockFlexibleResponse,
-                {}
-            );
+            const result = await fromHeaders.extractValueFromHttpEvent(mockHttpEvent, mockFlexibleResponse, {}, {});
 
             // Assert
             expect(result).toBe("application/json, text/plain, */*");

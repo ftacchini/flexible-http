@@ -7,5 +7,7 @@ export declare class FromQuery extends HttpExtractor {
     constructor(typesHelper: TypesHelper);
     extractValueFromHttpEvent(event: HttpEvent, response: FlexibleResponse, filterBinnacle: {
         [key: string]: string;
+    }, contextBinnacle: {
+        [key: string]: any;
     }): Promise<any>;
 }

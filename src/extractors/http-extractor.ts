@@ -37,18 +37,18 @@ export abstract class HttpExtractor implements FlexibleExtractor {
     public async extractValue(
         event: HttpEvent,
         response: FlexibleResponse,
-        filterBinnacle: {
-            [key: string]: string;
-        }): Promise<any> {
-        var value = this.extractValueFromHttpEvent(event, response, filterBinnacle);
+        filterBinnacle: { [key: string]: string },
+        contextBinnacle: { [key: string]: any }
+    ): Promise<any> {
+        var value = this.extractValueFromHttpEvent(event, response, filterBinnacle, contextBinnacle);
         return this.typesHelper.castToType(value, this.type);
     }
 
     protected abstract extractValueFromHttpEvent(
         event: HttpEvent,
         response: FlexibleResponse,
-        filterBinnacle: {
-            [key: string]: string;
-        }): Promise<any>;
+        filterBinnacle: { [key: string]: string },
+        contextBinnacle: { [key: string]: any }
+    ): Promise<any>;
 
 }

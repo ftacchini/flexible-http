@@ -63,9 +63,10 @@ export class FromPath extends HttpExtractor{
     public async extractValueFromHttpEvent(
         event: HttpEvent,
         response: FlexibleResponse,
-        filterBinnacle: {
-            [key: string]: string;
-        }): Promise<any> {
+        filterBinnacle: { [key: string]: string },
+        contextBinnacle: { [key: string]: any }
+            
+        ): Promise<any> {
 
             let keys: Key[] = [];
             const regex = this.routeProcessor.pathToRegexp(filterBinnacle.path, keys);
