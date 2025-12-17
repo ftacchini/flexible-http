@@ -1,6 +1,6 @@
 import "reflect-metadata";
 import "jasmine";
-import { HttpDelete } from "../../../src/filters/http-delete";
+import { HttpDelete } from "../../../src/built-ins/filters/http-delete";
 import { HttpEvent } from "../../../src/http-event";
 import { RouteProcessor } from "../../../src/helpers/route-processor";
 import { Request, Response } from "express";

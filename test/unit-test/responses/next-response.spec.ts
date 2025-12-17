@@ -1,6 +1,6 @@
 import "reflect-metadata";
 import "jasmine";
-import { NextResponse } from "../../../src/responses/next-response";
+import { NextResponse } from "../../../src/built-ins/responses/next-response";
 import { Response, NextFunction } from "express";
 
 describe("NextResponse", () => {

@@ -1,7 +1,7 @@
 import "reflect-metadata";
 import "jasmine";
-import { FromBody } from "../../../src/extractors/from-body";
-import { HttpBodyType } from "../../../src/extractors/http-body-type";
+import { FromBody } from "../../../src/built-ins/extractors/from-body";
+import { HttpBodyType } from "../../../src/http-body-type";
 import { HttpEvent } from "../../../src/http-event";
 import { FlexibleResponse } from "flexible-core";
 import { Request, Response } from "express";

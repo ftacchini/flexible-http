@@ -21,7 +21,7 @@ import * as http from 'http';
 import * as fs from 'fs';
 import * as path from 'path';
 import express from 'express';
-import { EjsResponse } from '../../src/responses/ejs-response';
+import { EjsResponse } from '../../src/built-ins/responses/ejs-response';
 
 const RESPONSE_TEST_PORT = 3020;
 

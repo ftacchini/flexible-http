@@ -3,7 +3,7 @@ import "jasmine";
 import { DummyFramework, FlexibleApp, FlexibleFrameworkModule, FlexibleAppBuilder, SilentLoggerModule, FlexibleContainer } from "flexible-core";
 import { DependencyContainer } from "tsyringe";
 import { HttpGet, HttpModule, HttpMethod } from "../../src";
-import { JsonResponse } from "../../src/responses/json-response";
+import { JsonResponse } from "../../src/built-ins/responses/json-response";
 import * as http from 'http';
 import * as https from 'https';
 
