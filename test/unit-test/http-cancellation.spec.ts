@@ -1,7 +1,7 @@
 import "reflect-metadata";
 import "jasmine";
 import { HttpEvent } from "../../src/http-event";
-import { HttpSourceConfig } from "../../src/http-abstract-source";
+import { HttpSourceConfig } from "../../src/event-sources/http-abstract-source";
 import { Request, Response } from "express";
 
 describe("HTTP Cancellation Support", () => {

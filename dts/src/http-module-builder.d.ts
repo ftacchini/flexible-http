@@ -1,7 +1,7 @@
 import express from "express";
 import * as https from 'https';
 import { HttpModule } from "./http-module";
-import { HttpSourceConfig } from "./http-abstract-source";
+import { HttpSourceConfig } from "./event-sources/http-abstract-source";
 export declare class HttpModuleBuilder {
     private port;
     private application;

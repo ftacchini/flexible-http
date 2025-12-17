@@ -1,9 +1,9 @@
-import { HttpSourceModule } from "./http-source-module";
+import { HttpSourceModule } from "./event-sources/http-source-module";
 import express from "express";
 import * as https from 'https';
-import { HttpsSourceModule } from "./https-source-module";
+import { HttpsSourceModule } from "./event-sources/https-source-module";
 import { HttpModule } from "./http-module";
-import { HttpSourceConfig } from "./http-abstract-source";
+import { HttpSourceConfig } from "./event-sources/http-abstract-source";
 
 
 const DEFAULT_HTTP_PORT: number = 8080;
@@ -72,3 +72,6 @@ export class HttpModuleBuilder {
         this.config = null;
     }
 }
+
+// Attach the builder method to HttpModule to avoid circular dependency
+HttpModule.builder = () => new HttpModuleBuilder();

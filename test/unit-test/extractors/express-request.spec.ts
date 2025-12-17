@@ -1,6 +1,6 @@
 import "reflect-metadata";
 import "jasmine";
-import { ExpressRequest } from "../../../src/extractors/express-request";
+import { ExpressRequest } from "../../../src/built-ins/extractors/express-request";
 import { HttpEvent } from "../../../src/http-event";
 import { FlexibleResponse } from "flexible-core";
 import { Request, Response } from "express";

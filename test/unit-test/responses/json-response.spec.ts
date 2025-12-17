@@ -1,6 +1,6 @@
 import "reflect-metadata";
 import "jasmine";
-import { JsonResponse } from "../../../src/responses/json-response";
+import { JsonResponse } from "../../../src/built-ins/responses/json-response";
 import { Response, NextFunction } from "express";
 
 describe("JsonResponse", () => {
