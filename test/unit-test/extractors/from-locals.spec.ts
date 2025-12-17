@@ -1,6 +1,6 @@
 import "reflect-metadata";
 import "jasmine";
-import { FromLocals } from "../../../src/extractors/from-locals";
+import { FromLocals } from "../../../src/built-ins/extractors/from-locals";
 import { HttpEvent } from "../../../src/http-event";
 import { FlexibleResponse } from "flexible-core";
 import { Request, Response } from "express";
@@ -50,11 +50,7 @@ describe("FromLocals Extractor", () => {
             fromLocals.allLocals = true;
 
             // Act
-            const result = await fromLocals.extractValueFromHttpEvent(
-                mockHttpEvent,
-                mockFlexibleResponse,
-                {}
-            );
+            const result = await fromLocals.extractValueFromHttpEvent(mockHttpEvent, mockFlexibleResponse, {}, {});
 
             // Assert
             expect(result).toEqual(localsData);
@@ -68,11 +64,7 @@ describe("FromLocals Extractor", () => {
             fromLocals.allLocals = true;
 
             // Act
-            const result = await fromLocals.extractValueFromHttpEvent(
-                mockHttpEvent,
-                mockFlexibleResponse,
-                {}
-            );
+            const result = await fromLocals.extractValueFromHttpEvent(mockHttpEvent, mockFlexibleResponse, {}, {});
 
             // Assert
             expect(result).toEqual(localsData);
@@ -91,11 +83,7 @@ describe("FromLocals Extractor", () => {
             fromLocals.allLocals = true;
 
             // Act
-            const result = await fromLocals.extractValueFromHttpEvent(
-                mockHttpEvent,
-                mockFlexibleResponse,
-                {}
-            );
+            const result = await fromLocals.extractValueFromHttpEvent(mockHttpEvent, mockFlexibleResponse, {}, {});
 
             // Assert
             expect(result).toEqual(localsData);
@@ -108,11 +96,7 @@ describe("FromLocals Extractor", () => {
             fromLocals.allLocals = true;
 
             // Act
-            const result = await fromLocals.extractValueFromHttpEvent(
-                mockHttpEvent,
-                mockFlexibleResponse,
-                {}
-            );
+            const result = await fromLocals.extractValueFromHttpEvent(mockHttpEvent, mockFlexibleResponse, {}, {});
 
             // Assert
             expect(result).toEqual({});
@@ -136,11 +120,7 @@ describe("FromLocals Extractor", () => {
             fromLocals.allLocals = true;
 
             // Act
-            const result = await fromLocals.extractValueFromHttpEvent(
-                mockHttpEvent,
-                mockFlexibleResponse,
-                {}
-            );
+            const result = await fromLocals.extractValueFromHttpEvent(mockHttpEvent, mockFlexibleResponse, {}, {});
 
             // Assert
             expect(result).toEqual(localsData);
@@ -157,11 +137,7 @@ describe("FromLocals Extractor", () => {
             fromLocals.allLocals = true;
 
             // Act
-            const result = await fromLocals.extractValueFromHttpEvent(
-                mockHttpEvent,
-                mockFlexibleResponse,
-                {}
-            );
+            const result = await fromLocals.extractValueFromHttpEvent(mockHttpEvent, mockFlexibleResponse, {}, {});
 
             // Assert
             expect(result).toEqual(localsData);
@@ -182,11 +158,7 @@ describe("FromLocals Extractor", () => {
             fromLocals.allLocals = true;
 
             // Act
-            const result = await fromLocals.extractValueFromHttpEvent(
-                mockHttpEvent,
-                mockFlexibleResponse,
-                {}
-            );
+            const result = await fromLocals.extractValueFromHttpEvent(mockHttpEvent, mockFlexibleResponse, {}, {});
 
             // Assert
             expect(result).toEqual(localsData);
@@ -203,11 +175,7 @@ describe("FromLocals Extractor", () => {
             fromLocals.allLocals = false;
 
             // Act
-            const result = await fromLocals.extractValueFromHttpEvent(
-                mockHttpEvent,
-                mockFlexibleResponse,
-                {}
-            );
+            const result = await fromLocals.extractValueFromHttpEvent(mockHttpEvent, mockFlexibleResponse, {}, {});
 
             // Assert
             expect(result).toEqual({ id: 1, name: "John" });
@@ -222,11 +190,7 @@ describe("FromLocals Extractor", () => {
             fromLocals.allLocals = false;
 
             // Act
-            const result = await fromLocals.extractValueFromHttpEvent(
-                mockHttpEvent,
-                mockFlexibleResponse,
-                {}
-            );
+            const result = await fromLocals.extractValueFromHttpEvent(mockHttpEvent, mockFlexibleResponse, {}, {});
 
             // Assert
             expect(result).toBe("abc123");
@@ -241,11 +205,7 @@ describe("FromLocals Extractor", () => {
             fromLocals.allLocals = false;
 
             // Act
-            const result = await fromLocals.extractValueFromHttpEvent(
-                mockHttpEvent,
-                mockFlexibleResponse,
-                {}
-            );
+            const result = await fromLocals.extractValueFromHttpEvent(mockHttpEvent, mockFlexibleResponse, {}, {});
 
             // Assert
             expect(result).toBe(42);
@@ -260,11 +220,7 @@ describe("FromLocals Extractor", () => {
             fromLocals.allLocals = false;
 
             // Act
-            const result = await fromLocals.extractValueFromHttpEvent(
-                mockHttpEvent,
-                mockFlexibleResponse,
-                {}
-            );
+            const result = await fromLocals.extractValueFromHttpEvent(mockHttpEvent, mockFlexibleResponse, {}, {});
 
             // Assert
             expect(result).toBeUndefined();
@@ -285,11 +241,7 @@ describe("FromLocals Extractor", () => {
             fromLocals.allLocals = false;
 
             // Act
-            const result = await fromLocals.extractValueFromHttpEvent(
-                mockHttpEvent,
-                mockFlexibleResponse,
-                {}
-            );
+            const result = await fromLocals.extractValueFromHttpEvent(mockHttpEvent, mockFlexibleResponse, {}, {});
 
             // Assert
             expect(result).toBe("req-12345");
@@ -304,11 +256,7 @@ describe("FromLocals Extractor", () => {
             fromLocals.allLocals = false;
 
             // Act
-            const result = await fromLocals.extractValueFromHttpEvent(
-                mockHttpEvent,
-                mockFlexibleResponse,
-                {}
-            );
+            const result = await fromLocals.extractValueFromHttpEvent(mockHttpEvent, mockFlexibleResponse, {}, {});
 
             // Assert
             expect(result).toBe(true);
@@ -323,11 +271,7 @@ describe("FromLocals Extractor", () => {
             fromLocals.allLocals = false;
 
             // Act
-            const result = await fromLocals.extractValueFromHttpEvent(
-                mockHttpEvent,
-                mockFlexibleResponse,
-                {}
-            );
+            const result = await fromLocals.extractValueFromHttpEvent(mockHttpEvent, mockFlexibleResponse, {}, {});
 
             // Assert
             expect(result).toBe(42);
@@ -342,11 +286,7 @@ describe("FromLocals Extractor", () => {
             fromLocals.allLocals = false;
 
             // Act
-            const result = await fromLocals.extractValueFromHttpEvent(
-                mockHttpEvent,
-                mockFlexibleResponse,
-                {}
-            );
+            const result = await fromLocals.extractValueFromHttpEvent(mockHttpEvent, mockFlexibleResponse, {}, {});
 
             // Assert
             expect(result).toEqual(["admin", "user"]);
@@ -367,11 +307,7 @@ describe("FromLocals Extractor", () => {
             fromLocals.allLocals = false;
 
             // Act
-            const result = await fromLocals.extractValueFromHttpEvent(
-                mockHttpEvent,
-                mockFlexibleResponse,
-                {}
-            );
+            const result = await fromLocals.extractValueFromHttpEvent(mockHttpEvent, mockFlexibleResponse, {}, {});
 
             // Assert
             expect(result).toEqual({ profile: { name: "John Doe" } });
@@ -388,11 +324,7 @@ describe("FromLocals Extractor", () => {
             fromLocals.allLocals = false;
 
             // Act
-            const result = await fromLocals.extractValueFromHttpEvent(
-                mockHttpEvent,
-                mockFlexibleResponse,
-                {}
-            );
+            const result = await fromLocals.extractValueFromHttpEvent(mockHttpEvent, mockFlexibleResponse, {}, {});
 
             // Assert
             expect(result).toBeUndefined();
@@ -406,11 +338,7 @@ describe("FromLocals Extractor", () => {
             fromLocals.allLocals = true;
 
             // Act
-            const result = await fromLocals.extractValueFromHttpEvent(
-                mockHttpEvent,
-                mockFlexibleResponse,
-                {}
-            );
+            const result = await fromLocals.extractValueFromHttpEvent(mockHttpEvent, mockFlexibleResponse, {}, {});
 
             // Assert
             expect(result).toBeUndefined();
@@ -423,11 +351,7 @@ describe("FromLocals Extractor", () => {
             fromLocals.allLocals = true;
 
             // Act
-            const result = await fromLocals.extractValueFromHttpEvent(
-                mockHttpEvent,
-                mockFlexibleResponse,
-                {}
-            );
+            const result = await fromLocals.extractValueFromHttpEvent(mockHttpEvent, mockFlexibleResponse, {}, {});
 
             // Assert
             expect(result).toEqual({});
@@ -442,11 +366,7 @@ describe("FromLocals Extractor", () => {
             fromLocals.allLocals = false;
 
             // Act
-            const result = await fromLocals.extractValueFromHttpEvent(
-                mockHttpEvent,
-                mockFlexibleResponse,
-                {}
-            );
+            const result = await fromLocals.extractValueFromHttpEvent(mockHttpEvent, mockFlexibleResponse, {}, {});
 
             // Assert
             expect(result).toBeUndefined();
@@ -461,11 +381,7 @@ describe("FromLocals Extractor", () => {
             // Don't set name
 
             // Act
-            const result = await fromLocals.extractValueFromHttpEvent(
-                mockHttpEvent,
-                mockFlexibleResponse,
-                {}
-            );
+            const result = await fromLocals.extractValueFromHttpEvent(mockHttpEvent, mockFlexibleResponse, {}, {});
 
             // Assert
             expect(result).toBeUndefined();
@@ -478,11 +394,7 @@ describe("FromLocals Extractor", () => {
             fromLocals.allLocals = false;
 
             // Act
-            const result = await fromLocals.extractValueFromHttpEvent(
-                mockHttpEvent,
-                mockFlexibleResponse,
-                {}
-            );
+            const result = await fromLocals.extractValueFromHttpEvent(mockHttpEvent, mockFlexibleResponse, {}, {});
 
             // Assert
             expect(result).toBeUndefined();
@@ -499,11 +411,7 @@ describe("FromLocals Extractor", () => {
             fromLocals.allLocals = false;
 
             // Act
-            const result = await fromLocals.extractValueFromHttpEvent(
-                mockHttpEvent,
-                mockFlexibleResponse,
-                {}
-            );
+            const result = await fromLocals.extractValueFromHttpEvent(mockHttpEvent, mockFlexibleResponse, {}, {});
 
             // Assert
             expect(result).toBe("");
@@ -518,11 +426,7 @@ describe("FromLocals Extractor", () => {
             fromLocals.allLocals = false;
 
             // Act
-            const result = await fromLocals.extractValueFromHttpEvent(
-                mockHttpEvent,
-                mockFlexibleResponse,
-                {}
-            );
+            const result = await fromLocals.extractValueFromHttpEvent(mockHttpEvent, mockFlexibleResponse, {}, {});
 
             // Assert
             expect(result).toBe("  ");
@@ -537,11 +441,7 @@ describe("FromLocals Extractor", () => {
             fromLocals.allLocals = false;
 
             // Act
-            const result = await fromLocals.extractValueFromHttpEvent(
-                mockHttpEvent,
-                mockFlexibleResponse,
-                {}
-            );
+            const result = await fromLocals.extractValueFromHttpEvent(mockHttpEvent, mockFlexibleResponse, {}, {});
 
             // Assert
             expect(result).toBe(0);
@@ -556,11 +456,7 @@ describe("FromLocals Extractor", () => {
             fromLocals.allLocals = false;
 
             // Act
-            const result = await fromLocals.extractValueFromHttpEvent(
-                mockHttpEvent,
-                mockFlexibleResponse,
-                {}
-            );
+            const result = await fromLocals.extractValueFromHttpEvent(mockHttpEvent, mockFlexibleResponse, {}, {});
 
             // Assert
             expect(result).toBe(false);
@@ -575,11 +471,7 @@ describe("FromLocals Extractor", () => {
             fromLocals.allLocals = false;
 
             // Act
-            const result = await fromLocals.extractValueFromHttpEvent(
-                mockHttpEvent,
-                mockFlexibleResponse,
-                {}
-            );
+            const result = await fromLocals.extractValueFromHttpEvent(mockHttpEvent, mockFlexibleResponse, {}, {});
 
             // Assert
             expect(result).toBeNull();
@@ -594,11 +486,7 @@ describe("FromLocals Extractor", () => {
             fromLocals.allLocals = false;
 
             // Act
-            const result = await fromLocals.extractValueFromHttpEvent(
-                mockHttpEvent,
-                mockFlexibleResponse,
-                {}
-            );
+            const result = await fromLocals.extractValueFromHttpEvent(mockHttpEvent, mockFlexibleResponse, {}, {});
 
             // Assert
             expect(result).toBeUndefined();
@@ -613,11 +501,7 @@ describe("FromLocals Extractor", () => {
             fromLocals.allLocals = false;
 
             // Act
-            const result = await fromLocals.extractValueFromHttpEvent(
-                mockHttpEvent,
-                mockFlexibleResponse,
-                {}
-            );
+            const result = await fromLocals.extractValueFromHttpEvent(mockHttpEvent, mockFlexibleResponse, {}, {});
 
             // Assert
             expect(result).toEqual([]);
@@ -632,11 +516,7 @@ describe("FromLocals Extractor", () => {
             fromLocals.allLocals = false;
 
             // Act
-            const result = await fromLocals.extractValueFromHttpEvent(
-                mockHttpEvent,
-                mockFlexibleResponse,
-                {}
-            );
+            const result = await fromLocals.extractValueFromHttpEvent(mockHttpEvent, mockFlexibleResponse, {}, {});
 
             // Assert
             expect(result).toEqual({});
@@ -660,11 +540,7 @@ describe("FromLocals Extractor", () => {
             fromLocals.allLocals = false;
 
             // Act
-            const result = await fromLocals.extractValueFromHttpEvent(
-                mockHttpEvent,
-                mockFlexibleResponse,
-                {}
-            );
+            const result = await fromLocals.extractValueFromHttpEvent(mockHttpEvent, mockFlexibleResponse, {}, {});
 
             // Assert
             expect(result).toEqual(localsData.user);
@@ -685,11 +561,7 @@ describe("FromLocals Extractor", () => {
             fromLocals.allLocals = false;
 
             // Act
-            const result = await fromLocals.extractValueFromHttpEvent(
-                mockHttpEvent,
-                mockFlexibleResponse,
-                {}
-            );
+            const result = await fromLocals.extractValueFromHttpEvent(mockHttpEvent, mockFlexibleResponse, {}, {});
 
             // Assert
             expect(result).toEqual(localsData.session);
@@ -704,11 +576,7 @@ describe("FromLocals Extractor", () => {
             fromLocals.allLocals = false;
 
             // Act
-            const result = await fromLocals.extractValueFromHttpEvent(
-                mockHttpEvent,
-                mockFlexibleResponse,
-                {}
-            );
+            const result = await fromLocals.extractValueFromHttpEvent(mockHttpEvent, mockFlexibleResponse, {}, {});
 
             // Assert
             expect(result).toBe("req-12345-abcde");
@@ -728,11 +596,7 @@ describe("FromLocals Extractor", () => {
             fromLocals.allLocals = true;
 
             // Act
-            const result = await fromLocals.extractValueFromHttpEvent(
-                mockHttpEvent,
-                mockFlexibleResponse,
-                {}
-            );
+            const result = await fromLocals.extractValueFromHttpEvent(mockHttpEvent, mockFlexibleResponse, {}, {});
 
             // Assert
             expect(result).toEqual(localsData);

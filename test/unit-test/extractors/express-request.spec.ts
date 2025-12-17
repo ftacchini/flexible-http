@@ -1,6 +1,6 @@
 import "reflect-metadata";
 import "jasmine";
-import { ExpressRequest } from "../../../src/extractors/express-request";
+import { ExpressRequest } from "../../../src/built-ins/extractors/express-request";
 import { HttpEvent } from "../../../src/http-event";
 import { FlexibleResponse } from "flexible-core";
 import { Request, Response } from "express";
@@ -54,11 +54,7 @@ describe("ExpressRequest Extractor", () => {
             mockHttpEvent = new HttpEvent(mockRequest as Request, mockResponse as Response);
 
             // Act
-            const result = await expressRequest.extractValue(
-                mockHttpEvent,
-                mockFlexibleResponse,
-                {}
-            );
+            const result = await expressRequest.extractValue(mockHttpEvent, mockFlexibleResponse, {}, {});
 
             // Assert
             expect(result).toBe(mockRequest);
@@ -78,11 +74,7 @@ describe("ExpressRequest Extractor", () => {
             mockHttpEvent = new HttpEvent(mockRequest as Request, mockResponse as Response);
 
             // Act
-            const result = await expressRequest.extractValue(
-                mockHttpEvent,
-                mockFlexibleResponse,
-                {}
-            );
+            const result = await expressRequest.extractValue(mockHttpEvent, mockFlexibleResponse, {}, {});
 
             // Assert
             expect(result).toBe(mockRequest);
@@ -105,11 +97,7 @@ describe("ExpressRequest Extractor", () => {
             mockHttpEvent = new HttpEvent(mockRequest as Request, mockResponse as Response);
 
             // Act
-            const result = await expressRequest.extractValue(
-                mockHttpEvent,
-                mockFlexibleResponse,
-                {}
-            );
+            const result = await expressRequest.extractValue(mockHttpEvent, mockFlexibleResponse, {}, {});
 
             // Assert
             expect(result).toBe(mockRequest);
@@ -123,11 +111,7 @@ describe("ExpressRequest Extractor", () => {
             mockHttpEvent = new HttpEvent(mockRequest as Request, mockResponse as Response);
 
             // Act
-            const result = await expressRequest.extractValue(
-                mockHttpEvent,
-                mockFlexibleResponse,
-                {}
-            );
+            const result = await expressRequest.extractValue(mockHttpEvent, mockFlexibleResponse, {}, {});
 
             // Assert
             expect(result).toBe(mockRequest);
@@ -141,11 +125,7 @@ describe("ExpressRequest Extractor", () => {
             mockHttpEvent = new HttpEvent(mockRequest as Request, mockResponse as Response);
 
             // Act
-            const result = await expressRequest.extractValue(
-                mockHttpEvent,
-                mockFlexibleResponse,
-                {}
-            );
+            const result = await expressRequest.extractValue(mockHttpEvent, mockFlexibleResponse, {}, {});
 
             // Assert
             expect(result).toBe(mockRequest);
@@ -159,11 +139,7 @@ describe("ExpressRequest Extractor", () => {
             mockHttpEvent = new HttpEvent(mockRequest as Request, mockResponse as Response);
 
             // Act
-            const result = await expressRequest.extractValue(
-                mockHttpEvent,
-                mockFlexibleResponse,
-                {}
-            );
+            const result = await expressRequest.extractValue(mockHttpEvent, mockFlexibleResponse, {}, {});
 
             // Assert
             expect(result).toBe(mockRequest);
@@ -180,11 +156,7 @@ describe("ExpressRequest Extractor", () => {
             mockHttpEvent = new HttpEvent(mockRequest as Request, mockResponse as Response);
 
             // Act
-            const result = await expressRequest.extractValue(
-                mockHttpEvent,
-                mockFlexibleResponse,
-                {}
-            );
+            const result = await expressRequest.extractValue(mockHttpEvent, mockFlexibleResponse, {}, {});
 
             // Assert
             expect(result).toBe(mockRequest);
@@ -199,11 +171,7 @@ describe("ExpressRequest Extractor", () => {
             mockHttpEvent = new HttpEvent(mockRequest as Request, mockResponse as Response);
 
             // Act
-            const result = await expressRequest.extractValue(
-                mockHttpEvent,
-                mockFlexibleResponse,
-                {}
-            );
+            const result = await expressRequest.extractValue(mockHttpEvent, mockFlexibleResponse, {}, {});
 
             // Assert
             expect(result).toBe(mockRequest);
@@ -218,11 +186,7 @@ describe("ExpressRequest Extractor", () => {
             mockHttpEvent = new HttpEvent(mockRequest as Request, mockResponse as Response);
 
             // Act
-            const result = await expressRequest.extractValue(
-                mockHttpEvent,
-                mockFlexibleResponse,
-                {}
-            );
+            const result = await expressRequest.extractValue(mockHttpEvent, mockFlexibleResponse, {}, {});
 
             // Assert
             expect(result).toBe(mockRequest);
@@ -235,11 +199,7 @@ describe("ExpressRequest Extractor", () => {
             mockHttpEvent = new HttpEvent(mockRequest as Request, mockResponse as Response);
 
             // Act
-            const result = await expressRequest.extractValue(
-                mockHttpEvent,
-                mockFlexibleResponse,
-                {}
-            );
+            const result = await expressRequest.extractValue(mockHttpEvent, mockFlexibleResponse, {}, {});
 
             // Assert
             expect(result).toBe(mockRequest);
@@ -252,11 +212,7 @@ describe("ExpressRequest Extractor", () => {
             mockHttpEvent = new HttpEvent(mockRequest as Request, mockResponse as Response);
 
             // Act
-            const result = await expressRequest.extractValue(
-                mockHttpEvent,
-                mockFlexibleResponse,
-                {}
-            );
+            const result = await expressRequest.extractValue(mockHttpEvent, mockFlexibleResponse, {}, {});
 
             // Assert
             expect(result).toBe(mockRequest);
@@ -269,11 +225,7 @@ describe("ExpressRequest Extractor", () => {
             mockHttpEvent = new HttpEvent(mockRequest as Request, mockResponse as Response);
 
             // Act
-            const result = await expressRequest.extractValue(
-                mockHttpEvent,
-                mockFlexibleResponse,
-                {}
-            );
+            const result = await expressRequest.extractValue(mockHttpEvent, mockFlexibleResponse, {}, {});
 
             // Assert
             expect(result).toBe(mockRequest);
@@ -286,11 +238,7 @@ describe("ExpressRequest Extractor", () => {
             mockHttpEvent = new HttpEvent(mockRequest as Request, mockResponse as Response);
 
             // Act
-            const result = await expressRequest.extractValue(
-                mockHttpEvent,
-                mockFlexibleResponse,
-                {}
-            );
+            const result = await expressRequest.extractValue(mockHttpEvent, mockFlexibleResponse, {}, {});
 
             // Assert
             expect(result).toBe(mockRequest);
@@ -324,11 +272,7 @@ describe("ExpressRequest Extractor", () => {
             mockHttpEvent = new HttpEvent(mockRequest as Request, mockResponse as Response);
 
             // Act
-            const result = await expressRequest.extractValue(
-                mockHttpEvent,
-                mockFlexibleResponse,
-                {}
-            );
+            const result = await expressRequest.extractValue(mockHttpEvent, mockFlexibleResponse, {}, {});
 
             // Assert
             expect(result).toBe(mockRequest);

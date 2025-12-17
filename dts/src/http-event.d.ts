@@ -8,7 +8,8 @@ export declare class HttpEvent implements FlexibleEvent {
     readonly routeData: RouteData<HttpEventProperties>;
     readonly requestId?: string;
     readonly sourceIp: string;
-    constructor(request: Request, response: Response, requestId?: string);
+    readonly cancellationToken?: AbortSignal;
+    constructor(request: Request, response: Response, requestId?: string, cancellationToken?: AbortSignal);
     get data(): {
         request: Request;
         response: Response;

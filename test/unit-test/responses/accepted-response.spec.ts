@@ -1,6 +1,6 @@
 import "reflect-metadata";
 import "jasmine";
-import { AcceptedResponse } from "../../../src/responses/accepted-response";
+import { AcceptedResponse } from "../../../src/built-ins/responses/accepted-response";
 import { Response, NextFunction } from "express";
 
 describe("AcceptedResponse", () => {

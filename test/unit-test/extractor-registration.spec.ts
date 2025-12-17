@@ -1,11 +1,11 @@
 import "reflect-metadata";
 import "jasmine";
 import { container as globalContainer, DependencyContainer } from "tsyringe";
-import { FromBody } from "../../src/extractors/from-body";
-import { FromHeaders } from "../../src/extractors/from-headers";
-import { FromQuery } from "../../src/extractors/from-query";
-import { FromPath } from "../../src/extractors/from-path";
-import { FromLocals } from "../../src/extractors/from-locals";
+import { FromBody } from "../../src/built-ins/extractors/from-body";
+import { FromHeaders } from "../../src/built-ins/extractors/from-headers";
+import { FromQuery } from "../../src/built-ins/extractors/from-query";
+import { FromPath } from "../../src/built-ins/extractors/from-path";
+import { FromLocals } from "../../src/built-ins/extractors/from-locals";
 import { HTTP_SOURCE_TYPES } from "../../src/http-source-types";
 import { TypesHelper } from "../../src/helpers/types-helper";
 

@@ -1,7 +1,7 @@
 import "reflect-metadata";
 import "jasmine";
-import { FromBody } from "../../../src/extractors/from-body";
-import { HttpBodyType } from "../../../src/extractors/http-body-type";
+import { FromBody } from "../../../src/built-ins/extractors/from-body";
+import { HttpBodyType } from "../../../src/http-body-type";
 import { HttpEvent } from "../../../src/http-event";
 import { FlexibleResponse } from "flexible-core";
 import { Request, Response } from "express";
@@ -77,11 +77,7 @@ describe("FromBody Extractor", () => {
             fromBody.bodyType = HttpBodyType.Json;
 
             // Act
-            const result = await fromBody.extractValueFromHttpEvent(
-                mockHttpEvent,
-                mockFlexibleResponse,
-                {}
-            );
+            const result = await fromBody.extractValueFromHttpEvent(mockHttpEvent, mockFlexibleResponse, {}, {});
 
             // Assert
             expect(result).toEqual(bodyData);
@@ -97,11 +93,7 @@ describe("FromBody Extractor", () => {
             fromBody.bodyType = HttpBodyType.Json;
 
             // Act
-            const result = await fromBody.extractValueFromHttpEvent(
-                mockHttpEvent,
-                mockFlexibleResponse,
-                {}
-            );
+            const result = await fromBody.extractValueFromHttpEvent(mockHttpEvent, mockFlexibleResponse, {}, {});
 
             // Assert
             expect(result).toBe("testuser");
@@ -117,11 +109,7 @@ describe("FromBody Extractor", () => {
             fromBody.bodyType = HttpBodyType.Json;
 
             // Act
-            const result = await fromBody.extractValueFromHttpEvent(
-                mockHttpEvent,
-                mockFlexibleResponse,
-                {}
-            );
+            const result = await fromBody.extractValueFromHttpEvent(mockHttpEvent, mockFlexibleResponse, {}, {});
 
             // Assert
             expect(result).toBeUndefined();
@@ -142,11 +130,7 @@ describe("FromBody Extractor", () => {
             fromBody.bodyType = HttpBodyType.Json;
 
             // Act
-            const result = await fromBody.extractValueFromHttpEvent(
-                mockHttpEvent,
-                mockFlexibleResponse,
-                {}
-            );
+            const result = await fromBody.extractValueFromHttpEvent(mockHttpEvent, mockFlexibleResponse, {}, {});
 
             // Assert
             expect(result).toEqual(bodyData);
@@ -180,11 +164,7 @@ describe("FromBody Extractor", () => {
             fromBody.bodyOptions = { extended: false };
 
             // Act
-            const result = await fromBody.extractValueFromHttpEvent(
-                mockHttpEvent,
-                mockFlexibleResponse,
-                {}
-            );
+            const result = await fromBody.extractValueFromHttpEvent(mockHttpEvent, mockFlexibleResponse, {}, {});
 
             // Assert
             expect(result).toEqual({ field1: "value1", field2: "value2" });
@@ -217,11 +197,7 @@ describe("FromBody Extractor", () => {
             fromBody.bodyOptions = { extended: false };
 
             // Act
-            const result = await fromBody.extractValueFromHttpEvent(
-                mockHttpEvent,
-                mockFlexibleResponse,
-                {}
-            );
+            const result = await fromBody.extractValueFromHttpEvent(mockHttpEvent, mockFlexibleResponse, {}, {});
 
             // Assert
             expect(result).toBe("value1");
@@ -254,11 +230,7 @@ describe("FromBody Extractor", () => {
             fromBody.bodyType = HttpBodyType.Text;
 
             // Act
-            const result = await fromBody.extractValueFromHttpEvent(
-                mockHttpEvent,
-                mockFlexibleResponse,
-                {}
-            );
+            const result = await fromBody.extractValueFromHttpEvent(mockHttpEvent, mockFlexibleResponse, {}, {});
 
             // Assert
             expect(result).toBe(bodyData);
@@ -291,11 +263,7 @@ describe("FromBody Extractor", () => {
             fromBody.bodyType = HttpBodyType.Raw;
 
             // Act
-            const result = await fromBody.extractValueFromHttpEvent(
-                mockHttpEvent,
-                mockFlexibleResponse,
-                {}
-            );
+            const result = await fromBody.extractValueFromHttpEvent(mockHttpEvent, mockFlexibleResponse, {}, {});
 
             // Assert
             expect(result).toBeInstanceOf(Buffer);
@@ -328,11 +296,7 @@ describe("FromBody Extractor", () => {
             fromBody.bodyType = HttpBodyType.Json;
 
             // Act
-            const result = await fromBody.extractValueFromHttpEvent(
-                mockHttpEvent,
-                mockFlexibleResponse,
-                {}
-            );
+            const result = await fromBody.extractValueFromHttpEvent(mockHttpEvent, mockFlexibleResponse, {}, {});
 
             // Assert - body-parser returns empty object for empty content
             expect(result).toBeDefined();
@@ -347,11 +311,7 @@ describe("FromBody Extractor", () => {
             fromBody.bodyType = HttpBodyType.Json;
 
             // Act
-            const result = await fromBody.extractValueFromHttpEvent(
-                mockHttpEvent,
-                mockFlexibleResponse,
-                {}
-            );
+            const result = await fromBody.extractValueFromHttpEvent(mockHttpEvent, mockFlexibleResponse, {}, {});
 
             // Assert
             expect(result).toBeUndefined();
@@ -365,11 +325,7 @@ describe("FromBody Extractor", () => {
             fromBody.bodyType = HttpBodyType.Json;
 
             // Act
-            const result = await fromBody.extractValueFromHttpEvent(
-                mockHttpEvent,
-                mockFlexibleResponse,
-                {}
-            );
+            const result = await fromBody.extractValueFromHttpEvent(mockHttpEvent, mockFlexibleResponse, {}, {});
 
             // Assert - when body is null, extractor returns undefined
             expect(result).toBeUndefined();
@@ -384,11 +340,7 @@ describe("FromBody Extractor", () => {
             fromBody.bodyType = HttpBodyType.Json;
 
             // Act
-            const result = await fromBody.extractValueFromHttpEvent(
-                mockHttpEvent,
-                mockFlexibleResponse,
-                {}
-            );
+            const result = await fromBody.extractValueFromHttpEvent(mockHttpEvent, mockFlexibleResponse, {}, {});
 
             // Assert
             expect(result).toBeUndefined();
@@ -405,11 +357,7 @@ describe("FromBody Extractor", () => {
             // Don't set bodyType - should default to JSON
 
             // Act
-            const result = await fromBody.extractValueFromHttpEvent(
-                mockHttpEvent,
-                mockFlexibleResponse,
-                {}
-            );
+            const result = await fromBody.extractValueFromHttpEvent(mockHttpEvent, mockFlexibleResponse, {}, {});
 
             // Assert
             expect(result).toEqual(bodyData);
@@ -426,11 +374,7 @@ describe("FromBody Extractor", () => {
             fromBody.bodyType = HttpBodyType.Any;
 
             // Act
-            const result = await fromBody.extractValueFromHttpEvent(
-                mockHttpEvent,
-                mockFlexibleResponse,
-                {}
-            );
+            const result = await fromBody.extractValueFromHttpEvent(mockHttpEvent, mockFlexibleResponse, {}, {});
 
             // Assert
             expect(result).toEqual(bodyData);
@@ -448,11 +392,7 @@ describe("FromBody Extractor", () => {
             fromBody.bodyOptions = { limit: "1mb" };
 
             // Act
-            const result = await fromBody.extractValueFromHttpEvent(
-                mockHttpEvent,
-                mockFlexibleResponse,
-                {}
-            );
+            const result = await fromBody.extractValueFromHttpEvent(mockHttpEvent, mockFlexibleResponse, {}, {});
 
             // Assert
             expect(result).toEqual(bodyData);

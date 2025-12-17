@@ -1,6 +1,6 @@
 import "reflect-metadata";
 import "jasmine";
-import { StreamResponse } from "../../../src/responses/stream-response";
+import { StreamResponse } from "../../../src/built-ins/responses/stream-response";
 import { Response, NextFunction } from "express";
 import { Writable } from "stream";
 

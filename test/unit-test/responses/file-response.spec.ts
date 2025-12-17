@@ -1,6 +1,6 @@
 import "reflect-metadata";
 import "jasmine";
-import { HttpFileResponse } from "../../../src/responses/file-response";
+import { HttpFileResponse } from "../../../src/built-ins/responses/file-response";
 import { Response, NextFunction } from "express";
 
 describe("HttpFileResponse", () => {

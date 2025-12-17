@@ -1,6 +1,6 @@
 import { FlexibleResponse, FlexibleLogger, FLEXIBLE_APP_TYPES } from "flexible-core";
 import { inject, injectable } from "tsyringe";
-import { AcceptedResponse } from "../responses/accepted-response";
+import { AcceptedResponse } from "../built-ins/responses/accepted-response";
 import { NextFunction, Response} from "express";
 
 

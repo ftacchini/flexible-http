@@ -1,6 +1,6 @@
 import "reflect-metadata";
 import "jasmine";
-import { HttpPatch } from "../../../src/filters/http-patch";
+import { HttpPatch } from "../../../src/built-ins/filters/http-patch";
 import { HttpEvent } from "../../../src/http-event";
 import { RouteProcessor } from "../../../src/helpers/route-processor";
 import { Request, Response } from "express";
