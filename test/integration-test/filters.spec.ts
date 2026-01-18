@@ -645,5 +645,60 @@ describe("HTTP Filters Integration Tests", () => {
             expect(postResponse.statusCode).toBe(200);
             expect(JSON.parse(postResponse.body)).toEqual(postExpected);
         });
+
+        it("Should handle similar routes without path accumulation (bug fix test)", async () => {
+            // ARRANGE - This test verifies the fix for the filterBinnacle sharing bug
+            // Previously, routes like /users and /users/:id would accumulate paths
+            const listPath = '/users';
+            const detailPath = '/users/:id';
+            const listExpected = { action: 'list', users: ['user1', 'user2'] };
+            const detailExpected = { action: 'detail', userId: '123' };
+
+            // Add route for listing users
+            framework.addPipelineDefinition({
+                filterStack: [{
+                    type: HttpGet,
+                    configuration: <any>{ path: listPath }
+                }],
+                middlewareStack: [{
+                    activationContext: {
+                        activate: async () => {
+                            return listExpected;
+                        }
+                    },
+                    extractorRecipes: {}
+                }]
+            });
+
+            // Add route for getting user by ID
+            framework.addPipelineDefinition({
+                filterStack: [{
+                    type: HttpGet,
+                    configuration: <any>{ path: detailPath }
+                }],
+                middlewareStack: [{
+                    activationContext: {
+                        activate: async () => {
+                            return detailExpected;
+                        }
+                    },
+                    extractorRecipes: {}
+                }]
+            });
+
+            await createAndStartApp();
+
+            // ACT
+            const listResponse = await makeRequest('GET', '/users');
+            const detailResponse = await makeRequest('GET', '/users/123');
+
+            // ASSERT
+            // Both routes should work correctly without path accumulation
+            expect(listResponse.statusCode).toBe(200);
+            expect(JSON.parse(listResponse.body)).toEqual(listExpected);
+
+            expect(detailResponse.statusCode).toBe(200);
+            expect(JSON.parse(detailResponse.body)).toEqual(detailExpected);
+        });
     });
 });
