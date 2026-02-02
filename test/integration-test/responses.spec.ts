@@ -13,6 +13,7 @@ import {
     HttpPost,
     HttpModule,
     JsonResponse,
+    JsonErrorResponse,
     AcceptedResponse,
     HttpFileResponse,
     NextResponse
@@ -190,6 +191,216 @@ describe("HTTP Responses Integration Tests", () => {
             expect(response.statusCode).toBe(200);
             const result = JSON.parse(response.body);
             expect(result).toEqual({});
+        });
+    });
+
+    describe("JsonErrorResponse", () => {
+        it("Should send error response with custom status code and message", async () => {
+            // ARRANGE
+            const path = '/error-custom';
+            const statusCode = 404;
+            const errorMessage = 'Resource not found';
+
+            framework.addPipelineDefinition({
+                filterStack: [{
+                    type: HttpGet,
+                    configuration: <any>{ path: path }
+                }],
+                middlewareStack: [{
+                    activationContext: {
+                        activate: async () => {
+                            return new JsonErrorResponse(statusCode, errorMessage);
+                        }
+                    },
+                    extractorRecipes: {}
+                }]
+            });
+
+            await createAndStartApp();
+
+            // ACT
+            const response = await makeRequest('GET', path);
+
+            // ASSERT
+            expect(response.statusCode).toBe(404);
+            expect(response.headers['content-type']).toContain('application/json');
+            const result = JSON.parse(response.body);
+            expect(result).toEqual({
+                error: true,
+                statusCode: 404,
+                message: errorMessage
+            });
+        });
+
+        it("Should use default message for 500 error when no message provided", async () => {
+            // ARRANGE
+            const path = '/error-500';
+
+            framework.addPipelineDefinition({
+                filterStack: [{
+                    type: HttpGet,
+                    configuration: <any>{ path: path }
+                }],
+                middlewareStack: [{
+                    activationContext: {
+                        activate: async () => {
+                            return new JsonErrorResponse(500);
+                        }
+                    },
+                    extractorRecipes: {}
+                }]
+            });
+
+            await createAndStartApp();
+
+            // ACT
+            const response = await makeRequest('GET', path);
+
+            // ASSERT
+            expect(response.statusCode).toBe(500);
+            const result = JSON.parse(response.body);
+            expect(result).toEqual({
+                error: true,
+                statusCode: 500,
+                message: 'Internal Server Error'
+            });
+        });
+
+        it("Should use default message for 401 unauthorized error", async () => {
+            // ARRANGE
+            const path = '/error-401';
+
+            framework.addPipelineDefinition({
+                filterStack: [{
+                    type: HttpGet,
+                    configuration: <any>{ path: path }
+                }],
+                middlewareStack: [{
+                    activationContext: {
+                        activate: async () => {
+                            return new JsonErrorResponse(401);
+                        }
+                    },
+                    extractorRecipes: {}
+                }]
+            });
+
+            await createAndStartApp();
+
+            // ACT
+            const response = await makeRequest('GET', path);
+
+            // ASSERT
+            expect(response.statusCode).toBe(401);
+            const result = JSON.parse(response.body);
+            expect(result).toEqual({
+                error: true,
+                statusCode: 401,
+                message: 'Unauthorized'
+            });
+        });
+
+        it("Should use default message for 403 forbidden error", async () => {
+            // ARRANGE
+            const path = '/error-403';
+
+            framework.addPipelineDefinition({
+                filterStack: [{
+                    type: HttpGet,
+                    configuration: <any>{ path: path }
+                }],
+                middlewareStack: [{
+                    activationContext: {
+                        activate: async () => {
+                            return new JsonErrorResponse(403);
+                        }
+                    },
+                    extractorRecipes: {}
+                }]
+            });
+
+            await createAndStartApp();
+
+            // ACT
+            const response = await makeRequest('GET', path);
+
+            // ASSERT
+            expect(response.statusCode).toBe(403);
+            const result = JSON.parse(response.body);
+            expect(result).toEqual({
+                error: true,
+                statusCode: 403,
+                message: 'Forbidden'
+            });
+        });
+
+        it("Should use generic 'Error' message for unknown status codes", async () => {
+            // ARRANGE
+            const path = '/error-418';
+
+            framework.addPipelineDefinition({
+                filterStack: [{
+                    type: HttpGet,
+                    configuration: <any>{ path: path }
+                }],
+                middlewareStack: [{
+                    activationContext: {
+                        activate: async () => {
+                            return new JsonErrorResponse(418);
+                        }
+                    },
+                    extractorRecipes: {}
+                }]
+            });
+
+            await createAndStartApp();
+
+            // ACT
+            const response = await makeRequest('GET', path);
+
+            // ASSERT
+            expect(response.statusCode).toBe(418);
+            const result = JSON.parse(response.body);
+            expect(result).toEqual({
+                error: true,
+                statusCode: 418,
+                message: 'Error'
+            });
+        });
+
+        it("Should override default message with custom message for known status codes", async () => {
+            // ARRANGE
+            const path = '/error-custom-override';
+            const customMessage = 'Custom server error message';
+
+            framework.addPipelineDefinition({
+                filterStack: [{
+                    type: HttpGet,
+                    configuration: <any>{ path: path }
+                }],
+                middlewareStack: [{
+                    activationContext: {
+                        activate: async () => {
+                            return new JsonErrorResponse(500, customMessage);
+                        }
+                    },
+                    extractorRecipes: {}
+                }]
+            });
+
+            await createAndStartApp();
+
+            // ACT
+            const response = await makeRequest('GET', path);
+
+            // ASSERT
+            expect(response.statusCode).toBe(500);
+            const result = JSON.parse(response.body);
+            expect(result).toEqual({
+                error: true,
+                statusCode: 500,
+                message: customMessage
+            });
         });
     });
 
