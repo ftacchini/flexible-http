@@ -13,7 +13,6 @@ import {
     HttpPost,
     HttpModule,
     JsonResponse,
-    JsonErrorResponse,
     AcceptedResponse,
     HttpFileResponse,
     NextResponse
@@ -194,7 +193,7 @@ describe("HTTP Responses Integration Tests", () => {
         });
     });
 
-    describe("JsonErrorResponse", () => {
+    describe("JsonResponse with status codes", () => {
         it("Should send error response with custom status code and message", async () => {
             // ARRANGE
             const path = '/error-custom';
@@ -209,7 +208,11 @@ describe("HTTP Responses Integration Tests", () => {
                 middlewareStack: [{
                     activationContext: {
                         activate: async () => {
-                            return new JsonErrorResponse(statusCode, errorMessage);
+                            return new JsonResponse({
+                                error: true,
+                                statusCode: statusCode,
+                                message: errorMessage
+                            }, statusCode);
                         }
                     },
                     extractorRecipes: {}
@@ -232,7 +235,7 @@ describe("HTTP Responses Integration Tests", () => {
             });
         });
 
-        it("Should use default message for 500 error when no message provided", async () => {
+        it("Should send 500 error response", async () => {
             // ARRANGE
             const path = '/error-500';
 
@@ -244,7 +247,11 @@ describe("HTTP Responses Integration Tests", () => {
                 middlewareStack: [{
                     activationContext: {
                         activate: async () => {
-                            return new JsonErrorResponse(500);
+                            return new JsonResponse({
+                                error: true,
+                                statusCode: 500,
+                                message: 'Internal Server Error'
+                            }, 500);
                         }
                     },
                     extractorRecipes: {}
@@ -266,7 +273,7 @@ describe("HTTP Responses Integration Tests", () => {
             });
         });
 
-        it("Should use default message for 401 unauthorized error", async () => {
+        it("Should send 401 unauthorized error", async () => {
             // ARRANGE
             const path = '/error-401';
 
@@ -278,7 +285,11 @@ describe("HTTP Responses Integration Tests", () => {
                 middlewareStack: [{
                     activationContext: {
                         activate: async () => {
-                            return new JsonErrorResponse(401);
+                            return new JsonResponse({
+                                error: true,
+                                statusCode: 401,
+                                message: 'Unauthorized'
+                            }, 401);
                         }
                     },
                     extractorRecipes: {}
@@ -300,7 +311,7 @@ describe("HTTP Responses Integration Tests", () => {
             });
         });
 
-        it("Should use default message for 403 forbidden error", async () => {
+        it("Should send 403 forbidden error", async () => {
             // ARRANGE
             const path = '/error-403';
 
@@ -312,7 +323,11 @@ describe("HTTP Responses Integration Tests", () => {
                 middlewareStack: [{
                     activationContext: {
                         activate: async () => {
-                            return new JsonErrorResponse(403);
+                            return new JsonResponse({
+                                error: true,
+                                statusCode: 403,
+                                message: 'Forbidden'
+                            }, 403);
                         }
                     },
                     extractorRecipes: {}
@@ -334,7 +349,7 @@ describe("HTTP Responses Integration Tests", () => {
             });
         });
 
-        it("Should use generic 'Error' message for unknown status codes", async () => {
+        it("Should handle custom status codes like 418", async () => {
             // ARRANGE
             const path = '/error-418';
 
@@ -346,7 +361,11 @@ describe("HTTP Responses Integration Tests", () => {
                 middlewareStack: [{
                     activationContext: {
                         activate: async () => {
-                            return new JsonErrorResponse(418);
+                            return new JsonResponse({
+                                error: true,
+                                statusCode: 418,
+                                message: "I'm a teapot"
+                            }, 418);
                         }
                     },
                     extractorRecipes: {}
@@ -364,11 +383,11 @@ describe("HTTP Responses Integration Tests", () => {
             expect(result).toEqual({
                 error: true,
                 statusCode: 418,
-                message: 'Error'
+                message: "I'm a teapot"
             });
         });
 
-        it("Should override default message with custom message for known status codes", async () => {
+        it("Should send custom error message with 500 status", async () => {
             // ARRANGE
             const path = '/error-custom-override';
             const customMessage = 'Custom server error message';
@@ -381,7 +400,11 @@ describe("HTTP Responses Integration Tests", () => {
                 middlewareStack: [{
                     activationContext: {
                         activate: async () => {
-                            return new JsonErrorResponse(500, customMessage);
+                            return new JsonResponse({
+                                error: true,
+                                statusCode: 500,
+                                message: customMessage
+                            }, 500);
                         }
                     },
                     extractorRecipes: {}

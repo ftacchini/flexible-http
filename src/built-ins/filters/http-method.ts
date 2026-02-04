@@ -19,6 +19,7 @@ import { RouteProcessor } from "../../helpers/route-processor";
  * - Dynamic path parameters (e.g., '/users/:id')
  * - Nested route composition through filter chaining
  * - Regular expression-based path matching
+ * - Method-agnostic routing (when method is not set, accepts any HTTP verb)
  *
  * @example
  * ```typescript
@@ -30,7 +31,15 @@ import { RouteProcessor } from "../../helpers/route-processor";
  *   }
  * }
  *
- * // Can also be used directly for method-agnostic routing
+ * // Can be used directly for method-agnostic routing (accepts any HTTP verb)
+ * framework.addPipelineDefinition({
+ *   filterStack: [
+ *     { type: HttpMethod, configuration: { path: '/api' } }  // No method set - accepts GET, POST, PUT, etc.
+ *   ],
+ *   middlewareStack: [...]
+ * });
+ *
+ * // Or combined with method-specific filters
  * framework.addPipelineDefinition({
  *   filterStack: [
  *     { type: HttpMethod, configuration: { path: '/api' } },
@@ -70,6 +79,7 @@ export class HttpMethod implements FlexibleFilter {
 
     /**
      * The HTTP method this filter matches (e.g., "get", "post", "delete", "patch", "head").
+     * If not set (undefined), the filter will accept any HTTP verb.
      */
     public method: string;
 
@@ -114,17 +124,23 @@ export class HttpMethod implements FlexibleFilter {
      * Gets static routing information for this filter.
      * This is used by the framework for route optimization and static analysis.
      *
-     * @returns Partial route data containing event type, method, and static route parts
+     * @returns Partial route data containing event type, method (if set), and static route parts
      */
     public get staticRouting(): Partial<RouteData<HttpEventProperties>> {
-        return {
+        const routing: Partial<RouteData<HttpEventProperties>> = {
             eventType: HttpEvent.EventType,
-            method: this.method,
             routeParts: flatten(this.pathTokens
                 .filter((token: any) => typeof token === 'string')
                 .map((token: string) => token.split("/")))
                 .filter((p: string) => p) // Remove empty strings
         };
+
+        // Only include method if it's explicitly set
+        if (this.method) {
+            routing.method = this.method;
+        }
+
+        return routing;
     };
 
     /**

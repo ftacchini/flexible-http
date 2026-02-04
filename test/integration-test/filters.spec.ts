@@ -15,8 +15,9 @@ import {
     HttpDelete,
     HttpPatch,
     HttpHead,
-    HttpMethod,
-    HttpModuleBuilder
+    HttpPut,
+    HttpOption,
+    HttpMethod
 } from "../../src";
 import * as http from 'http';
 
@@ -595,6 +596,199 @@ describe("HTTP Filters Integration Tests", () => {
         });
     });
 
+    describe("HttpPut Filter", () => {
+        it("Should accept PUT requests matching the route", async () => {
+            // ARRANGE
+            const path = '/put-endpoint';
+            const expected = { method: 'PUT', success: true };
+
+            framework.addPipelineDefinition({
+                filterStack: [{
+                    type: HttpPut,
+                    configuration: <any>{ path: path }
+                }],
+                middlewareStack: [{
+                    activationContext: {
+                        activate: async () => {
+                            return expected;
+                        }
+                    },
+                    extractorRecipes: {}
+                }]
+            });
+
+            await createAndStartApp();
+
+            // ACT
+            const response = await makeRequest('PUT', path, { data: 'update' });
+
+            // ASSERT
+            expect(response.statusCode).toBe(200);
+            const result = JSON.parse(response.body);
+            expect(result).toEqual(expected);
+        });
+
+        it("Should reject GET requests to PUT-only route", async () => {
+            // ARRANGE
+            const path = '/put-only';
+
+            framework.addPipelineDefinition({
+                filterStack: [{
+                    type: HttpPut,
+                    configuration: <any>{ path: path }
+                }],
+                middlewareStack: [{
+                    activationContext: {
+                        activate: async () => {
+                            return { success: true };
+                        }
+                    },
+                    extractorRecipes: {}
+                }]
+            });
+
+            await createAndStartApp();
+
+            // ACT
+            const response = await makeRequest('GET', path);
+
+            // ASSERT
+            // Should get 404 since no route matches GET to this path
+            expect(response.statusCode).toBe(404);
+        });
+
+        it("Should handle PUT requests with path parameters", async () => {
+            // ARRANGE
+            const path = '/users/:id';
+            const expected = { method: 'PUT', userId: '123' };
+
+            framework.addPipelineDefinition({
+                filterStack: [{
+                    type: HttpPut,
+                    configuration: <any>{ path: path }
+                }],
+                middlewareStack: [{
+                    activationContext: {
+                        activate: async () => {
+                            return expected;
+                        }
+                    },
+                    extractorRecipes: {}
+                }]
+            });
+
+            await createAndStartApp();
+
+            // ACT
+            const response = await makeRequest('PUT', '/users/123', { name: 'Updated' });
+
+            // ASSERT
+            expect(response.statusCode).toBe(200);
+            const result = JSON.parse(response.body);
+            expect(result).toEqual(expected);
+        });
+    });
+
+    describe("HttpOption Filter", () => {
+        it("Should accept OPTIONS requests matching the route", async () => {
+            // ARRANGE
+            const path = '/options-endpoint';
+            const expected = { method: 'OPTIONS', allowedMethods: ['GET', 'POST', 'PUT'] };
+
+            framework.addPipelineDefinition({
+                filterStack: [{
+                    type: HttpOption,
+                    configuration: <any>{ path: path }
+                }],
+                middlewareStack: [{
+                    activationContext: {
+                        activate: async () => {
+                            return expected;
+                        }
+                    },
+                    extractorRecipes: {}
+                }]
+            });
+
+            await createAndStartApp();
+
+            // ACT
+            const response = await makeRequest('OPTIONS', path);
+
+            // ASSERT
+            expect(response.statusCode).toBe(200);
+            const result = JSON.parse(response.body);
+            expect(result).toEqual(expected);
+        });
+
+        it("Should reject GET requests to OPTIONS-only route", async () => {
+            // ARRANGE
+            const path = '/options-only';
+
+            framework.addPipelineDefinition({
+                filterStack: [{
+                    type: HttpOption,
+                    configuration: <any>{ path: path }
+                }],
+                middlewareStack: [{
+                    activationContext: {
+                        activate: async () => {
+                            return { success: true };
+                        }
+                    },
+                    extractorRecipes: {}
+                }]
+            });
+
+            await createAndStartApp();
+
+            // ACT
+            const response = await makeRequest('GET', path);
+
+            // ASSERT
+            // Should get 404 since no route matches GET to this path
+            expect(response.statusCode).toBe(404);
+        });
+
+        it("Should handle OPTIONS requests for CORS preflight", async () => {
+            // ARRANGE
+            const path = '/api/:splat*';  // v6 syntax for wildcard
+            const expected = { 
+                method: 'OPTIONS', 
+                cors: true,
+                allowedOrigins: ['*']
+            };
+
+            framework.addPipelineDefinition({
+                filterStack: [{
+                    type: HttpOption,
+                    configuration: <any>{ path: path }
+                }],
+                middlewareStack: [{
+                    activationContext: {
+                        activate: async () => {
+                            return expected;
+                        }
+                    },
+                    extractorRecipes: {}
+                }]
+            });
+
+            await createAndStartApp();
+
+            // ACT
+            const response = await makeRequest('OPTIONS', '/api/users', undefined, {
+                'Origin': 'https://example.com',
+                'Access-Control-Request-Method': 'POST'
+            });
+
+            // ASSERT
+            expect(response.statusCode).toBe(200);
+            const result = JSON.parse(response.body);
+            expect(result).toEqual(expected);
+        });
+    });
+
     describe("Multiple Routes", () => {
         it("Should handle multiple routes with different methods", async () => {
             // ARRANGE
@@ -699,6 +893,197 @@ describe("HTTP Filters Integration Tests", () => {
 
             expect(detailResponse.statusCode).toBe(200);
             expect(JSON.parse(detailResponse.body)).toEqual(detailExpected);
+        });
+    });
+
+    describe("HttpMethod Filter - Any Verb Support", () => {
+        it("Should accept GET requests when method is not set", async () => {
+            // ARRANGE
+            const path = '/api/resource';
+            const expected = { message: 'Any verb accepted', method: 'GET' };
+
+            framework.addPipelineDefinition({
+                filterStack: [{
+                    type: HttpMethod,
+                    configuration: <any>{ path: path }
+                }],
+                middlewareStack: [{
+                    activationContext: {
+                        activate: async () => {
+                            return expected;
+                        }
+                    },
+                    extractorRecipes: {}
+                }]
+            });
+
+            await createAndStartApp();
+
+            // ACT
+            const response = await makeRequest('GET', path);
+
+            // ASSERT
+            expect(response.statusCode).toBe(200);
+            const result = JSON.parse(response.body);
+            expect(result).toEqual(expected);
+        });
+
+        it("Should accept POST requests when method is not set", async () => {
+            // ARRANGE
+            const path = '/api/resource';
+            const expected = { message: 'Any verb accepted', method: 'POST' };
+
+            framework.addPipelineDefinition({
+                filterStack: [{
+                    type: HttpMethod,
+                    configuration: <any>{ path: path }
+                }],
+                middlewareStack: [{
+                    activationContext: {
+                        activate: async () => {
+                            return expected;
+                        }
+                    },
+                    extractorRecipes: {}
+                }]
+            });
+
+            await createAndStartApp();
+
+            // ACT
+            const response = await makeRequest('POST', path, { data: 'test' });
+
+            // ASSERT
+            expect(response.statusCode).toBe(200);
+            const result = JSON.parse(response.body);
+            expect(result).toEqual(expected);
+        });
+
+        it("Should accept PUT requests when method is not set", async () => {
+            // ARRANGE
+            const path = '/api/resource';
+            const expected = { message: 'Any verb accepted', method: 'PUT' };
+
+            framework.addPipelineDefinition({
+                filterStack: [{
+                    type: HttpMethod,
+                    configuration: <any>{ path: path }
+                }],
+                middlewareStack: [{
+                    activationContext: {
+                        activate: async () => {
+                            return expected;
+                        }
+                    },
+                    extractorRecipes: {}
+                }]
+            });
+
+            await createAndStartApp();
+
+            // ACT
+            const response = await makeRequest('PUT', path, { data: 'test' });
+
+            // ASSERT
+            expect(response.statusCode).toBe(200);
+            const result = JSON.parse(response.body);
+            expect(result).toEqual(expected);
+        });
+
+        it("Should accept DELETE requests when method is not set", async () => {
+            // ARRANGE
+            const path = '/api/resource';
+            const expected = { message: 'Any verb accepted', method: 'DELETE' };
+
+            framework.addPipelineDefinition({
+                filterStack: [{
+                    type: HttpMethod,
+                    configuration: <any>{ path: path }
+                }],
+                middlewareStack: [{
+                    activationContext: {
+                        activate: async () => {
+                            return expected;
+                        }
+                    },
+                    extractorRecipes: {}
+                }]
+            });
+
+            await createAndStartApp();
+
+            // ACT
+            const response = await makeRequest('DELETE', path);
+
+            // ASSERT
+            expect(response.statusCode).toBe(200);
+            const result = JSON.parse(response.body);
+            expect(result).toEqual(expected);
+        });
+
+        it("Should accept PATCH requests when method is not set", async () => {
+            // ARRANGE
+            const path = '/api/resource';
+            const expected = { message: 'Any verb accepted', method: 'PATCH' };
+
+            framework.addPipelineDefinition({
+                filterStack: [{
+                    type: HttpMethod,
+                    configuration: <any>{ path: path }
+                }],
+                middlewareStack: [{
+                    activationContext: {
+                        activate: async () => {
+                            return expected;
+                        }
+                    },
+                    extractorRecipes: {}
+                }]
+            });
+
+            await createAndStartApp();
+
+            // ACT
+            const response = await makeRequest('PATCH', path, { data: 'test' });
+
+            // ASSERT
+            expect(response.statusCode).toBe(200);
+            const result = JSON.parse(response.body);
+            expect(result).toEqual(expected);
+        });
+
+        it("Should work with path parameters when method is not set", async () => {
+            // ARRANGE
+            const path = '/api/resource/:id';
+            const expected = { message: 'Any verb with params', id: '123' };
+
+            framework.addPipelineDefinition({
+                filterStack: [{
+                    type: HttpMethod,
+                    configuration: <any>{ path: path }
+                }],
+                middlewareStack: [{
+                    activationContext: {
+                        activate: async () => {
+                            return expected;
+                        }
+                    },
+                    extractorRecipes: {}
+                }]
+            });
+
+            await createAndStartApp();
+
+            // ACT
+            const getResponse = await makeRequest('GET', '/api/resource/123');
+            const postResponse = await makeRequest('POST', '/api/resource/123', { data: 'test' });
+
+            // ASSERT
+            expect(getResponse.statusCode).toBe(200);
+            expect(JSON.parse(getResponse.body)).toEqual(expected);
+            
+            expect(postResponse.statusCode).toBe(200);
+            expect(JSON.parse(postResponse.body)).toEqual(expected);
         });
     });
 });

@@ -19,6 +19,9 @@ describe("JsonResponse", () => {
             "setHeader"
         ]);
 
+        // Make status return the mock response for chaining
+        mockResponse.status.and.returnValue(mockResponse);
+
         // Create a spy for the next function
         mockNext = jasmine.createSpy("next") as any;
     });
@@ -32,6 +35,7 @@ describe("JsonResponse", () => {
         await jsonResponse.writeToHttpResponse(mockResponse, mockNext);
 
         // Assert
+        expect(mockResponse.status).toHaveBeenCalledWith(200);
         expect(mockResponse.json).toHaveBeenCalledTimes(1);
         expect(mockResponse.json).toHaveBeenCalledWith(data);
     });
@@ -160,5 +164,47 @@ describe("JsonResponse", () => {
         expect(mockResponse.send).not.toHaveBeenCalled();
         expect(mockResponse.sendFile).not.toHaveBeenCalled();
         expect(mockResponse.render).not.toHaveBeenCalled();
+    });
+
+    it("should use custom status code when provided", async () => {
+        // Arrange
+        const data = { test: "data" };
+        const statusCode = 201;
+        const jsonResponse = new JsonResponse(data, statusCode);
+
+        // Act
+        await jsonResponse.writeToHttpResponse(mockResponse, mockNext);
+
+        // Assert
+        expect(mockResponse.status).toHaveBeenCalledWith(statusCode);
+        expect(mockResponse.json).toHaveBeenCalledWith(data);
+    });
+
+    it("should handle error status codes", async () => {
+        // Arrange
+        const data = { error: "Not found" };
+        const statusCode = 404;
+        const jsonResponse = new JsonResponse(data, statusCode);
+
+        // Act
+        await jsonResponse.writeToHttpResponse(mockResponse, mockNext);
+
+        // Assert
+        expect(mockResponse.status).toHaveBeenCalledWith(statusCode);
+        expect(mockResponse.json).toHaveBeenCalledWith(data);
+    });
+
+    it("should handle 500 status code", async () => {
+        // Arrange
+        const data = { error: "Internal server error" };
+        const statusCode = 500;
+        const jsonResponse = new JsonResponse(data, statusCode);
+
+        // Act
+        await jsonResponse.writeToHttpResponse(mockResponse, mockNext);
+
+        // Assert
+        expect(mockResponse.status).toHaveBeenCalledWith(statusCode);
+        expect(mockResponse.json).toHaveBeenCalledWith(data);
     });
 });

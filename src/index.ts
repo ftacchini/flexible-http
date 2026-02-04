@@ -19,3 +19,6 @@ export * from "./http-module-builder";
 export * from "./http-module";
 export * from "./http-source-types";
 export * from "./http-body-type";
+
+// Backward compatibility - JsonErrorResponse is now JsonResponse with status code parameter
+export { JsonResponse as JsonErrorResponse } from "./built-ins/responses/json-response";

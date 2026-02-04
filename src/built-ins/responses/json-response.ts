@@ -3,11 +3,11 @@ import { NextFunction, Response} from "express";
 
 export class JsonResponse implements HttpResponse {
 
-    constructor(private data: any) {
+    constructor(private data: any, private statusCode: number = 200) {
     }
 
     public async writeToHttpResponse(response: Response,  next: NextFunction): Promise<void> {
-        response.json(this.data);
+        response.status(this.statusCode).json(this.data);
         next();
     }
 }

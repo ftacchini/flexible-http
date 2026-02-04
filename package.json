@@ -1,6 +1,6 @@
 {
   "name": "flexible-http",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "Flexible Http",
   "main": "dist/src/index.js",
   "scripts": {
