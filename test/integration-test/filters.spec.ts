@@ -1086,4 +1086,338 @@ describe("HTTP Filters Integration Tests", () => {
             expect(JSON.parse(postResponse.body)).toEqual(expected);
         });
     });
+
+    describe("HTTP Verb Exclusivity", () => {
+        const testPath = '/api/test';
+        const successResponse = { success: true };
+
+        describe("HttpGet Filter", () => {
+            beforeEach(async () => {
+                framework.addPipelineDefinition({
+                    filterStack: [{
+                        type: HttpGet,
+                        configuration: <any>{ path: testPath }
+                    }],
+                    middlewareStack: [{
+                        activationContext: {
+                            activate: async () => successResponse
+                        },
+                        extractorRecipes: {}
+                    }]
+                });
+                await createAndStartApp();
+            });
+
+            it("Should accept GET requests", async () => {
+                const response = await makeRequest('GET', testPath);
+                expect(response.statusCode).toBe(200);
+                expect(JSON.parse(response.body)).toEqual(successResponse);
+            });
+
+            it("Should reject POST requests", async () => {
+                const response = await makeRequest('POST', testPath, { data: 'test' });
+                expect(response.statusCode).toBe(404);
+            });
+
+            it("Should reject PUT requests", async () => {
+                const response = await makeRequest('PUT', testPath, { data: 'test' });
+                expect(response.statusCode).toBe(404);
+            });
+
+            it("Should reject DELETE requests", async () => {
+                const response = await makeRequest('DELETE', testPath);
+                expect(response.statusCode).toBe(404);
+            });
+
+            it("Should reject PATCH requests", async () => {
+                const response = await makeRequest('PATCH', testPath, { data: 'test' });
+                expect(response.statusCode).toBe(404);
+            });
+
+            it("Should reject OPTIONS requests", async () => {
+                const response = await makeRequest('OPTIONS', testPath);
+                expect(response.statusCode).toBe(404);
+            });
+
+            it("Should reject HEAD requests", async () => {
+                const response = await makeRequest('HEAD', testPath);
+                expect(response.statusCode).toBe(404);
+            });
+        });
+
+        describe("HttpPost Filter", () => {
+            beforeEach(async () => {
+                framework.addPipelineDefinition({
+                    filterStack: [{
+                        type: HttpPost,
+                        configuration: <any>{ path: testPath }
+                    }],
+                    middlewareStack: [{
+                        activationContext: {
+                            activate: async () => successResponse
+                        },
+                        extractorRecipes: {}
+                    }]
+                });
+                await createAndStartApp();
+            });
+
+            it("Should accept POST requests", async () => {
+                const response = await makeRequest('POST', testPath, { data: 'test' });
+                expect(response.statusCode).toBe(200);
+                expect(JSON.parse(response.body)).toEqual(successResponse);
+            });
+
+            it("Should reject GET requests", async () => {
+                const response = await makeRequest('GET', testPath);
+                expect(response.statusCode).toBe(404);
+            });
+
+            it("Should reject PUT requests", async () => {
+                const response = await makeRequest('PUT', testPath, { data: 'test' });
+                expect(response.statusCode).toBe(404);
+            });
+
+            it("Should reject DELETE requests", async () => {
+                const response = await makeRequest('DELETE', testPath);
+                expect(response.statusCode).toBe(404);
+            });
+
+            it("Should reject PATCH requests", async () => {
+                const response = await makeRequest('PATCH', testPath, { data: 'test' });
+                expect(response.statusCode).toBe(404);
+            });
+        });
+
+        describe("HttpPut Filter", () => {
+            beforeEach(async () => {
+                framework.addPipelineDefinition({
+                    filterStack: [{
+                        type: HttpPut,
+                        configuration: <any>{ path: testPath }
+                    }],
+                    middlewareStack: [{
+                        activationContext: {
+                            activate: async () => successResponse
+                        },
+                        extractorRecipes: {}
+                    }]
+                });
+                await createAndStartApp();
+            });
+
+            it("Should accept PUT requests", async () => {
+                const response = await makeRequest('PUT', testPath, { data: 'test' });
+                expect(response.statusCode).toBe(200);
+                expect(JSON.parse(response.body)).toEqual(successResponse);
+            });
+
+            it("Should reject GET requests", async () => {
+                const response = await makeRequest('GET', testPath);
+                expect(response.statusCode).toBe(404);
+            });
+
+            it("Should reject POST requests", async () => {
+                const response = await makeRequest('POST', testPath, { data: 'test' });
+                expect(response.statusCode).toBe(404);
+            });
+
+            it("Should reject DELETE requests", async () => {
+                const response = await makeRequest('DELETE', testPath);
+                expect(response.statusCode).toBe(404);
+            });
+
+            it("Should reject PATCH requests", async () => {
+                const response = await makeRequest('PATCH', testPath, { data: 'test' });
+                expect(response.statusCode).toBe(404);
+            });
+        });
+
+        describe("HttpDelete Filter", () => {
+            beforeEach(async () => {
+                framework.addPipelineDefinition({
+                    filterStack: [{
+                        type: HttpDelete,
+                        configuration: <any>{ path: testPath }
+                    }],
+                    middlewareStack: [{
+                        activationContext: {
+                            activate: async () => successResponse
+                        },
+                        extractorRecipes: {}
+                    }]
+                });
+                await createAndStartApp();
+            });
+
+            it("Should accept DELETE requests", async () => {
+                const response = await makeRequest('DELETE', testPath);
+                expect(response.statusCode).toBe(200);
+                expect(JSON.parse(response.body)).toEqual(successResponse);
+            });
+
+            it("Should reject GET requests", async () => {
+                const response = await makeRequest('GET', testPath);
+                expect(response.statusCode).toBe(404);
+            });
+
+            it("Should reject POST requests", async () => {
+                const response = await makeRequest('POST', testPath, { data: 'test' });
+                expect(response.statusCode).toBe(404);
+            });
+
+            it("Should reject PUT requests", async () => {
+                const response = await makeRequest('PUT', testPath, { data: 'test' });
+                expect(response.statusCode).toBe(404);
+            });
+
+            it("Should reject PATCH requests", async () => {
+                const response = await makeRequest('PATCH', testPath, { data: 'test' });
+                expect(response.statusCode).toBe(404);
+            });
+        });
+
+        describe("HttpPatch Filter", () => {
+            beforeEach(async () => {
+                framework.addPipelineDefinition({
+                    filterStack: [{
+                        type: HttpPatch,
+                        configuration: <any>{ path: testPath }
+                    }],
+                    middlewareStack: [{
+                        activationContext: {
+                            activate: async () => successResponse
+                        },
+                        extractorRecipes: {}
+                    }]
+                });
+                await createAndStartApp();
+            });
+
+            it("Should accept PATCH requests", async () => {
+                const response = await makeRequest('PATCH', testPath, { data: 'test' });
+                expect(response.statusCode).toBe(200);
+                expect(JSON.parse(response.body)).toEqual(successResponse);
+            });
+
+            it("Should reject GET requests", async () => {
+                const response = await makeRequest('GET', testPath);
+                expect(response.statusCode).toBe(404);
+            });
+
+            it("Should reject POST requests", async () => {
+                const response = await makeRequest('POST', testPath, { data: 'test' });
+                expect(response.statusCode).toBe(404);
+            });
+
+            it("Should reject PUT requests", async () => {
+                const response = await makeRequest('PUT', testPath, { data: 'test' });
+                expect(response.statusCode).toBe(404);
+            });
+
+            it("Should reject DELETE requests", async () => {
+                const response = await makeRequest('DELETE', testPath);
+                expect(response.statusCode).toBe(404);
+            });
+        });
+
+        describe("HttpOption Filter", () => {
+            beforeEach(async () => {
+                framework.addPipelineDefinition({
+                    filterStack: [{
+                        type: HttpOption,
+                        configuration: <any>{ path: testPath }
+                    }],
+                    middlewareStack: [{
+                        activationContext: {
+                            activate: async () => successResponse
+                        },
+                        extractorRecipes: {}
+                    }]
+                });
+                await createAndStartApp();
+            });
+
+            it("Should accept OPTIONS requests", async () => {
+                const response = await makeRequest('OPTIONS', testPath);
+                expect(response.statusCode).toBe(200);
+                expect(JSON.parse(response.body)).toEqual(successResponse);
+            });
+
+            it("Should reject GET requests", async () => {
+                const response = await makeRequest('GET', testPath);
+                expect(response.statusCode).toBe(404);
+            });
+
+            it("Should reject POST requests", async () => {
+                const response = await makeRequest('POST', testPath, { data: 'test' });
+                expect(response.statusCode).toBe(404);
+            });
+
+            it("Should reject PUT requests", async () => {
+                const response = await makeRequest('PUT', testPath, { data: 'test' });
+                expect(response.statusCode).toBe(404);
+            });
+
+            it("Should reject DELETE requests", async () => {
+                const response = await makeRequest('DELETE', testPath);
+                expect(response.statusCode).toBe(404);
+            });
+
+            it("Should reject PATCH requests", async () => {
+                const response = await makeRequest('PATCH', testPath, { data: 'test' });
+                expect(response.statusCode).toBe(404);
+            });
+        });
+
+        describe("HttpHead Filter", () => {
+            beforeEach(async () => {
+                framework.addPipelineDefinition({
+                    filterStack: [{
+                        type: HttpHead,
+                        configuration: <any>{ path: testPath }
+                    }],
+                    middlewareStack: [{
+                        activationContext: {
+                            activate: async () => successResponse
+                        },
+                        extractorRecipes: {}
+                    }]
+                });
+                await createAndStartApp();
+            });
+
+            it("Should accept HEAD requests", async () => {
+                const response = await makeRequest('HEAD', testPath);
+                expect(response.statusCode).toBe(200);
+                // HEAD requests should not return a body
+                expect(response.body).toBe('');
+            });
+
+            it("Should reject GET requests", async () => {
+                const response = await makeRequest('GET', testPath);
+                expect(response.statusCode).toBe(404);
+            });
+
+            it("Should reject POST requests", async () => {
+                const response = await makeRequest('POST', testPath, { data: 'test' });
+                expect(response.statusCode).toBe(404);
+            });
+
+            it("Should reject PUT requests", async () => {
+                const response = await makeRequest('PUT', testPath, { data: 'test' });
+                expect(response.statusCode).toBe(404);
+            });
+
+            it("Should reject DELETE requests", async () => {
+                const response = await makeRequest('DELETE', testPath);
+                expect(response.statusCode).toBe(404);
+            });
+
+            it("Should reject PATCH requests", async () => {
+                const response = await makeRequest('PATCH', testPath, { data: 'test' });
+                expect(response.statusCode).toBe(404);
+            });
+        });
+    });
 });

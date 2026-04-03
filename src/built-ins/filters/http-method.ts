@@ -101,7 +101,7 @@ export class HttpMethod implements FlexibleFilter {
      * @returns The route path pattern
      */
     public get path() {
-        return this._path ? this._path : ("/" + this.contextName)
+        return this._path ? this._path : ("/" + this.contextName.toLowerCase())
     }
 
     private _pathTokens: any[];
