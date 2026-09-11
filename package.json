@@ -3,6 +3,10 @@
   "version": "0.2.3",
   "description": "Flexible Http",
   "main": "dist/src/index.js",
+  "engines": {
+    "node": ">=16.0.0",
+    "npm": ">=7.0.0"
+  },
   "scripts": {
     "test": "npm run unit-test && npm run integration-test",
     "unit-test": "jasmine JASMINE_CONFIG_PATH=jasmine.unit-test.json",
